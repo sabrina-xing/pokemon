@@ -8,8 +8,10 @@ while True:
     if n >= 0 and n <= 40:
         break
 
+
+## TODO: Change password and host
 db_connection = mysql.connector.connect(
-    host="localhost", user="root", password="Sabi!234", database="pokemon"
+    host="localhost", user="root", password="PASSWORD HERE", database="pokemon"
 )
 
 cursor = db_connection.cursor()
