@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS attacks;
 
 CREATE TABLE account
   ( 
-     uid     DECIMAL(9, 0) NOT NULL PRIMARY KEY, 
+     uid     DECIMAL(9, 0) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
      acc_name    VARCHAR(40), NOT NULL,
      email    VARCHAR(255), NOT NULL
      usr_password    VARCHAR(255), NOT NULL
@@ -15,7 +15,7 @@ CREATE TABLE account
 
 CREATE TABLE transaction
   ( 
-     tid    DECIMAL(9, 0) NOT NULL PRIMARY KEY,
+     tid    DECIMAL(9, 0) NOT NULL PRIMARY KEY AUTO_INCREMENT ,
      sender_id  DECIMAL(9, 0) NOT NULL,
      receiver_id DECIMAL(9, 0) NOT NULL,
      card_id VARCHAR(20), NOT NULL
@@ -27,7 +27,7 @@ CREATE TABLE transaction
 
 CREATE TABLE pokemon_card
   ( 
-     card_id VARCHAR(20) NOT NULL, 
+     card_id VARCHAR(20) NOT NULL PRIMARY KEY, 
      pname VARCHAR(50) NOT NULL, 
      set_name VARCHAR(50) NOT NULL, 
      is_custom BOOLEAN NOT NULL,
@@ -35,7 +35,11 @@ CREATE TABLE pokemon_card
      generation VARCHAR(50) NOT NULL,
      release_date DATE NOT NULL,
      rarity VARCHAR(50) NOT NULL,
-     
+     pokemon_type VARCHAR(20) NOT NULL,
+     subtype VARCHAR(50) NOT NULL,
+     hp INT NOT NULL, 
+     level INT NOT NULL,
+     flavour_text VARCHAR(255),
   ); 
 
 CREATE TABLE weaknesses
@@ -54,10 +58,17 @@ CREATE TABLE resistanaces
 
 CREATE TABLE attacks 
   ( 
-
+    card_id VARCHAR(20) NOT NULL,
+    attack_name VARCHAR(20) NOT NULL,
+    description VARCHAR(255),
+    damage INT NOT NULL,
+    FOREIGN KEY(card_id) REFERENCES pokemon_cards(card_id),
   ); 
 
 CREATE TABLE ability
   ( 
-
+    card_id VARCHAR(20) NOT NULL,
+    ability_name VARCHAR(20) NOT NULL,
+    description VARCHAR(255),
+    FOREIGN KEY(card_id) REFERENCES pokemon_cards(card_id),
   ); 
