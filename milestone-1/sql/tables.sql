@@ -8,8 +8,8 @@ DROP TABLE IF EXISTS attacks;
 
 CREATE TABLE account
   ( 
-     uid     DECIMAL(9, 0) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-     user_name    VARCHAR(40), NOT NULL,
+     uid DECIMAL(9, 0) NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+     username    VARCHAR(40), NOT NULL,
      email    VARCHAR(255), NOT NULL,
      usr_password    VARCHAR(255), NOT NULL,
      bio VARCHAR(255),
@@ -68,10 +68,11 @@ CREATE TABLE attacks
     FOREIGN KEY(card_id) REFERENCES pokemon_cards(card_id),
   ); 
 
-CREATE TABLE ability
+CREATE TABLE abilities
   ( 
     card_id VARCHAR(20) NOT NULL,
     ability_name VARCHAR(20) NOT NULL,
     description VARCHAR(255),
     FOREIGN KEY(card_id) REFERENCES pokemon_cards(card_id),
   ); 
+
