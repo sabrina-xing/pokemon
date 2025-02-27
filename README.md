@@ -44,3 +44,9 @@ _(localhost:3000 by default)_
 2. `npm install`
 3. `npm start`
 
+### Interface Design 
+
+![upload new card page](https://github.com/user-attachments/assets/42a020ee-08bf-43b9-9e91-e6ff4d3cdaae)
+![trade pokemons page](https://github.com/user-attachments/assets/c96bde6d-cb7a-46a3-90ee-56c50fb64b9f)
+![login page](https://github.com/user-attachments/assets/185bc91b-79b8-4135-bcba-e47062851152)
+
