@@ -44,7 +44,7 @@ export default function Login() {
     //   router.push("/dashboard"); // Redirect after signup
     // }
     router.push("/dashboard"); // Redirect after signup
-
+    // TO DO: redirect to profile setup first
   };
 
   const handleLogin = () => {
