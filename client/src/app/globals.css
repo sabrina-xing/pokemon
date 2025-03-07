@@ -1,10 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* @import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,7 +20,63 @@
 }
 
 body {
-  color: var(--foreground);
   background: var(--background);
+  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+} */
+@import "tailwindcss";
+
+/* Default Light Mode Colors */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-sans: "PixeloidSans", sans-serif; /* ✅ Correct font definition */
+  --font-mono: "Joystix", monospace;
+}
+
+/* Dark Mode Colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* Apply Variables */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans); /* ✅ Apply custom font */
+}
+
+/* Ensure Custom Fonts Load */
+@font-face {
+  font-family: "PixeloidSans";
+  src: url("/fonts/PixeloidSans.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PixeloidSans";
+  src: url("/fonts/PixeloidSans-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Joystix";
+  src: url("/fonts/Joystix.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.text-outline {
+  -webkit-text-stroke: 2px black;
+  color: white;
+}
+
+.text-outline-thin {
+  -webkit-text-stroke: 1px black;
+  color: white;
 }
