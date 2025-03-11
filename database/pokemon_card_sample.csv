@@ -1,0 +1,10 @@
+card_id,pname,set_name,is_custom,image_url,generation,release_date,rarity,pokemon_type,subtype,hp,level,flavour_text
+base1-1,Alakazam,Base,False,https://images.pokemontcg.io/base1/1_hires.png,Base,1/9/1999,Rare Holo,['Psychic'],['Stage 2'],80,42,Its brain can outperform a supercomputer. Its intelligence quotient is said to be 5000.
+base1-2,Blastoise,Base,False,https://images.pokemontcg.io/base1/2_hires.png,Base,1/9/1999,Rare Holo,['Water'],['Stage 2'],100,52,A brutal Pokémon with pressurized water jets on its shell. They are used for high-speed tackles.
+base1-3,Chansey,Base,False,https://images.pokemontcg.io/base1/3_hires.png,Base,1/9/1999,Rare Holo,['Colorless'],['Basic'],120,55,A rare and elusive Pokémon that is said to bring happiness to those who manage to catch it.
+base1-4,Charizard,Base,False,https://images.pokemontcg.io/base1/4_hires.png,Base,1/9/1999,Rare Holo,['Fire'],['Stage 2'],120,76,Spits fire that is hot enough to melt boulders. Known to unintentionally cause forest fires.
+base1-5,Clefairy,Base,False,https://images.pokemontcg.io/base1/5_hires.png,Base,1/9/1999,Rare Holo,['Colorless'],['Basic'],40,14,Its magical and cute appeal has many admirers. It is rare and found only in certain areas.
+base1-6,Gyarados,Base,False,https://images.pokemontcg.io/base1/6_hires.png,Base,1/9/1999,Rare Holo,['Water'],['Stage 1'],100,41,"Rarely seen in the wild. Huge and vicious, it is capable of destroying entire cities in a rage."
+base1-7,Hitmonchan,Base,False,https://images.pokemontcg.io/base1/7_hires.png,Base,1/9/1999,Rare Holo,['Fighting'],['Basic'],70,33,"While seeming to do nothing, it fires punches in lightning-fast volleys that are impossible to see."
+base1-8,Machamp,Base,False,https://images.pokemontcg.io/base1/8_hires.png,Base,1/9/1999,Rare Holo,['Fighting'],['Stage 2'],100,67,"Using its amazing muscles, it throws powerful punches that can knock its victim clear over the horizon."
+base1-9,Magneton,Base,False,https://images.pokemontcg.io/base1/9_hires.png,Base,1/9/1999,Rare Holo,['Lightning'],['Stage 1'],60,28,Formed by several Magnemites linked together. It frequently appears when sunspots flare up.
