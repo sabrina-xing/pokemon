@@ -1,5 +1,6 @@
 import mysql.connector
-
+import csv
+from datetime import datetime
 db = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -86,11 +87,52 @@ schema = [
 for query in schema:
     mycursor.execute(query)
 
+def convert_date(date_str):
+    return datetime.strptime(date_str, "%m/%d/%Y").strftime("%Y-%m-%d")
+
+with open('../sample-data.csv', 'r') as csvfile:
+    csvreader = csv.reader(csvfile)
+    next(csvreader)
+
+    data_to_insert = []
+    for row in csvreader:
+        release_date = convert_date(row[6])
+        data_to_insert.append((
+            row[0],  # card_id
+            row[1],  # pname
+            row[2],  # set_name
+            row[3].lower() == 'true',  # is_custom (assuming 'true'/'false' in the CSV)
+            row[4],  # image_url
+            row[5],  # generation
+            release_date,
+            row[7],  # rarity
+            row[8],  # pokemon_type
+            row[9],  # subtype
+            int(row[10]),  # hp
+            int(row[11]),  # level
+            row[12]  # flavour_text
+        ))
+
+    mycursor.executemany("""
+            INSERT INTO pokemon_card (
+                card_id, pname, set_name, is_custom, image_url, generation, release_date,
+                rarity, pokemon_type, subtype, hp, level, flavour_text
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, data_to_insert)
+    
+    mycursor.execute("SELECT * FROM pokemon_card")
+    
+    rows = mycursor.fetchall()
+    for row in rows:
+        print(row)
+    
 def getPokemon(card_id, pname, set_name, types, generation, evolution):
     query = "SELECT * FROM pokemon_card" 
     params = []
     whereClause = " WHERE"
-        
+
+mycursor.close()
 
 
 
