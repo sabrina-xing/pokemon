@@ -86,3 +86,15 @@ schema = [
 for query in schema:
     mycursor.execute(query)
 
+def getPokemon(card_id, pname, set_name, types, generation, evolution):
+    query = "SELECT * FROM pokemon_card" 
+    params = []
+    whereClause = " WHERE"
+        
+
+
+
+    
+
+
+
