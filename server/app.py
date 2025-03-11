@@ -1,12 +1,11 @@
 from flask import Flask, make_response, request, jsonify, send_file
 from flask import Response
-from flask_pymongo import PyMongo
-from bson import Binary
+from bson import Binary 
 import base64, binascii
 import io
-from datasets.moneySet.moneyModel import predictMoney
-from datasets.sodaSet.sodaModel import predictSoda
-from datasets.phoneSet.phoneModel import predictPhone
+# from datasets.moneySet.moneyModel import predictMoney
+# from datasets.sodaSet.sodaModel import predictSoda
+# from datasets.phoneSet.phoneModel import predictPhone
 from PIL import Image
 from flask_cors import CORS
 
@@ -35,8 +34,6 @@ def search(name):
 
 
     pass
-
-
 
 
 
