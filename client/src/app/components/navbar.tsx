@@ -30,8 +30,8 @@ export default function Navbar() {
 
         <div className="flex w-1/2 justify-evenly font-bold">
           <a href="/upload" className="hover:text-gray-300">UPLOAD</a>
-          <a href="/trade" className="hover:text-gray-300">TRADE</a>
-          <a href="/discuss" className="hover:text-gray-300">DISCUSS</a>
+          <a href="/dashboard" className="hover:text-gray-300">TRADE</a>
+          <a href="/profile" className="hover:text-gray-300">PROFILE</a>
         </div>
       </div>
 

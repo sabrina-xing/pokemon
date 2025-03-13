@@ -14,17 +14,17 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // const result = await signIn("credentials", {
-    //   redirect: false,
-    //   email,
-    //   password,
-    // });
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
 
-    // if (result?.error) {
-    //   setError(result.error);
-    // } else {
-    //   router.push("/dashboard");
-    // }
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      router.push("/dashboard");
+    }
     // ----------------------------------------
     // if (!email || !password) {
     //   setError("Please fill out all fields.");
@@ -43,8 +43,8 @@ export default function Login() {
     //   console.log("Signup:", { email, password });
     //   router.push("/dashboard"); // Redirect after signup
     // }
-    router.push("/dashboard"); // Redirect after signup
-    // TO DO: redirect to profile setup first
+    // router.push("/dashboard"); // Redirect after signup
+
   };
 
   const handleLogin = () => {
@@ -65,10 +65,10 @@ export default function Login() {
           TRADING DEN
         </h2>
         {error && <p className="text-red-500 text-sm">{error}</p>}
-        <form 
-        onSubmit={handleSubmit} 
-        // onClick={handleLogin}
-        className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          // onClick={handleLogin}
+          className="space-y-4">
           <input
             type="email"
             placeholder="Email"
@@ -99,6 +99,12 @@ export default function Login() {
         >
           Sign in with Google
         </button> */}
+        <button
+          onClick={() => router.push("/signup")}
+          className="w-full text-white px-4 py-1 rounded-lg mt-4"
+        >
+          or signup here
+        </button>
       </div>
     </div>
   );
