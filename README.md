@@ -21,8 +21,38 @@ The final and most up to date code for the application structure will be kept in
 - [Python](https://www.python.org/) and [pip](https://pip.pypa.io/en/stable/) installed for the backend.
 
 2. Install required dependencies in root folder and both frontend and backend folders
+Setting up `/client` folder:
+- Run:
 ```
 npm install
+```
+- Create a file `/client/lib/db.ts` and add your MySQL password:
+```
+import mysql from "mysql2/promise";
+
+const pool = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "ADD YOUR PASSWORD HERE", // Change to your MySQL password
+  database: "pokemon_trading",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+export default pool;
+```
+- Now navigate to your MySQL Workbench and run the following commands:
+```
+CREATE DATABASE pokemon_trading;
+USE pokemon_trading;
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  name VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 ### Starting the server
