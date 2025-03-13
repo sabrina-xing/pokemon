@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get database credentials
-DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_HOST = os.getenv("DB_HOST", "localhost")  # sets default value if not found
 DB_USER = os.getenv("DB_USER", "root")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_NAME = os.getenv("DB_NAME", "pokepals")
@@ -101,7 +101,7 @@ for query in schema:
 def convert_date(date_str):
     return datetime.strptime(date_str, "%m/%d/%Y").strftime("%Y-%m-%d")
 
-with open('../database/pokemon_card_production.csv', 'r') as csvfile:
+with open('../pokemon-production.csv', 'r') as csvfile:
     csvreader = csv.reader(csvfile)
     next(csvreader)
 
@@ -131,6 +131,7 @@ with open('../database/pokemon_card_production.csv', 'r') as csvfile:
             )
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, data_to_insert)
+    db.commit()
     
     mycursor.execute("SELECT * FROM pokemon_card WHERE pname='Pikachu'")
     
