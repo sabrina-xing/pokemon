@@ -25,6 +25,12 @@ Setting up `/client` folder:
 ```
 npm install
 ```
+- Set environment variables:
+  - Run `openssl rand -base64 32` in your terminal to generate a secure 32-character key
+  - Create `/client/.env.local` file and add:
+    ```
+    NEXTAUTH_SECRET=<Generated Next auth key here>
+    ```
 - Create a file `/client/lib/db.ts` and add your MySQL password:
 ```
 import mysql from "mysql2/promise";
