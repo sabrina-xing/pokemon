@@ -1,11 +1,7 @@
-# pokemon
-
-CS 348 Group Project
-
+# Pokemon Trading SIte
 
 TO DO:
 - describe how to create and load your sample database to your chosen platform
-- how to run your working database-driven application
 
 ## Features
 - User profile creation with login/signup authentication
