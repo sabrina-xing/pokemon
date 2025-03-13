@@ -29,6 +29,7 @@ schema = [
     "DROP TABLE IF EXISTS resistances;",
     "DROP TABLE IF EXISTS weaknesses;",
     "DROP TABLE IF EXISTS transaction;",
+    "DROP TABLE IF EXISTS ownership",
     "DROP TABLE IF EXISTS pokemon_card;",
     "DROP TABLE IF EXISTS account;",
 
@@ -57,6 +58,16 @@ schema = [
         flavour_text VARCHAR(255)
     );""",
 
+    """
+    CREATE TABLE ownership (
+        uid INT NOT NULL,
+        card_id VARCHAR(20) NOT NULL,
+        PRIMARY KEY (uid, card_id),
+        FOREIGN KEY(uid) REFERENCES account(uid),
+        FOREIGN KEY(card_id) REFERENCES pokemon_card(card_id)
+    );
+    """,
+
     """CREATE TABLE transaction (
         tid INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         sender_id INT NOT NULL,
@@ -66,18 +77,6 @@ schema = [
         FOREIGN KEY(sender_id) REFERENCES account(uid),
         FOREIGN KEY(receiver_id) REFERENCES account(uid),
         FOREIGN KEY(card_id) REFERENCES pokemon_card(card_id)
-    );""",
-
-    """CREATE TABLE weaknesses (
-        type_name VARCHAR(20) NOT NULL, 
-        weakness VARCHAR(20) NOT NULL, 
-        PRIMARY KEY (type_name, weakness)
-    );""",
-
-    """CREATE TABLE resistances (
-        type_name VARCHAR(20) NOT NULL, 
-        resistance VARCHAR(20) NOT NULL,
-        PRIMARY KEY (type_name, resistance)
     );""",
 
     """CREATE TABLE attacks (
@@ -133,7 +132,7 @@ with open('../database/pokemon_card_production.csv', 'r') as csvfile:
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, data_to_insert)
     
-    # mycursor.execute("SELECT * FROM pokemon_card WHERE pname='Pikachu'")
+    mycursor.execute("SELECT * FROM pokemon_card WHERE pname='Pikachu'")
     
     rows = mycursor.fetchall()
     for row in rows:

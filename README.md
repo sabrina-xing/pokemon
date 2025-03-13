@@ -91,7 +91,9 @@ _(localhost:3000 by default)_
    - Open MySQL Shell: `mysql -u root -p`
    - `CREATE DATABASE [your database name]`
    - `use pokepals`
-6. Replace `user`, `passwd`, and `database` with your username, password, and database name
+
+## Populate Database
+6. Replace `user`, `passwd`, and `database` with your username, password, and database name in the popu
    ```python
    db = mysql.connector.connect(
     host="localhost",
@@ -100,3 +102,8 @@ _(localhost:3000 by default)_
     database="[your db name here]"
    )
    ```
+7. Run the data population script. This will create the needed tables in the database as well as populate the
+   tables with data from the csvs.
+   `python3 populate.py`
+   If it works, the output in the terminal should be all Pikachus in the deck :> 
+
