@@ -80,3 +80,8 @@ body {
   -webkit-text-stroke: 1px black;
   color: white;
 }
+
+[data-nextjs-overlay],
+[data-nextjs-toast] {
+  display: none !important;
+}
