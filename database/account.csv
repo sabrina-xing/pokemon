@@ -1,0 +1,6 @@
+uid,username,email,password,bio,pfp
+1,alice,alice@gmail.com,123alice,hello,
+2,bob,bob@yahoo.com,123bob,bye,
+3,carl,carl@uwaterloo.com,123carl,hi,
+4,daisy,daisy@gmail.com,123daisy,hello world,
+5,alice,alice1@gmail.com,123alice1,hello,
