@@ -6,8 +6,11 @@ CS 348 Group Project
 TO DO:
 - describe how to create and load your sample database to your chosen platform
 - how to run your working database-driven application
-- what feature it currently supports.
 
+## Features
+- User profile creation with login/signup authentication
+- Filtering and searching for pokemon cards, through other people's cards (in `/dashboard` page) and through the user's cards as well
+- Gifting and requesting Pokemon cards to/from other users
 
 ----------------------------------
 
