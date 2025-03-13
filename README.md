@@ -20,6 +20,7 @@ The final and most up to date code for the application structure will be kept in
 - [Python](https://www.python.org/) and [pip](https://pip.pypa.io/en/stable/) installed for the backend.
 
 2. Install required dependencies in root folder and both frontend and backend folders
+
 Setting up `/client` folder:
 - Run:
 ```
