@@ -90,12 +90,13 @@ _(localhost:3000 by default)_
    - Open command line or mysql shell
    - `mysql -u root -p`
    - `CREATE DATABASE [your database name]`
+   - `use pokepals`
 6. Replace `user`, `passwd`, and `database` with your username, password, and database name
    ```python
    db = mysql.connector.connect(
     host="localhost",
     user="root",
     passwd="",
-    database="testdatabase"
+    database="[your db name here]"
    )
    ```
