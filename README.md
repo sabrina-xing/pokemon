@@ -45,7 +45,7 @@ const pool = mysql.createPool({
 
 export default pool;
 ```
-- Now navigate to your MySQL Workbench and run the following commands:
+- Navigate to your MySQL Workbench and run the following commands to setup the necessary tables:
 ```
 CREATE DATABASE pokemon_trading;
 USE pokemon_trading;
