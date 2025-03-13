@@ -26,10 +26,18 @@ Setting up `/client` folder:
 npm install
 ```
 - Set environment variables:
-  - Run `openssl rand -base64 32` in your terminal to generate a secure 32-character key
+  - Navigate to `/client` folder and run `openssl rand -base64 32` in your terminal to generate a secure 32-character key
   - Create `/client/.env.local` file and add:
     ```
     NEXTAUTH_SECRET=<Generated Next auth key here>
+    ```
+  - Navigate to `/server` folder and create `/server/.env`, replacing each value below with your MySQL configuration:
+    ```
+    DB_HOST=localhost
+    DB_USER=root
+    DB_PASSWORD=your_mysql_password
+    DB_NAME=pokepals  # Change this to your actual database name
+    DB_PORT=3306  # Default MySQL port
     ```
 - Create a file `/client/lib/db.ts` and add your MySQL password:
 ```
