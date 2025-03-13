@@ -29,6 +29,16 @@ schema = [
         pfp VARCHAR(255)
     );""",
 
+    """
+    CREATE TABLE ownership (
+        uid INT NOT NULL,
+        card_id VARCHAR(20) NOT NULL,
+        PRIMARY KEY (uid, card_id),
+        FOREIGN KEY(uid) REFERENCES account(uid),
+        FOREIGN KEY(card_id) REFERENCES pokemon_card(card_id)
+    );
+    """
+
     """CREATE TABLE pokemon_card (
         card_id VARCHAR(20) NOT NULL PRIMARY KEY, 
         pname VARCHAR(50) NOT NULL, 
@@ -54,18 +64,6 @@ schema = [
         FOREIGN KEY(sender_id) REFERENCES account(uid),
         FOREIGN KEY(receiver_id) REFERENCES account(uid),
         FOREIGN KEY(card_id) REFERENCES pokemon_card(card_id)
-    );""",
-
-    """CREATE TABLE weaknesses (
-        type_name VARCHAR(20) NOT NULL, 
-        weakness VARCHAR(20) NOT NULL, 
-        PRIMARY KEY (type_name, weakness)
-    );""",
-
-    """CREATE TABLE resistances (
-        type_name VARCHAR(20) NOT NULL, 
-        resistance VARCHAR(20) NOT NULL,
-        PRIMARY KEY (type_name, resistance)
     );""",
 
     """CREATE TABLE attacks (
