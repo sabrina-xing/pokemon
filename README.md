@@ -88,7 +88,7 @@ _(localhost:3000 by default)_
 4. `pip install mysql-connector-python`
 5. Create a new db using mysql
    - Open command line or mysql shell
-   - `mysql -u root -p`
+   - Open MySQL Shell: `mysql -u root -p`
    - `CREATE DATABASE [your database name]`
    - `use pokepals`
 6. Replace `user`, `passwd`, and `database` with your username, password, and database name
