@@ -5,3 +5,5 @@
 datasets/moneySet/__pycache__/
 datasets/phoneSet/__pycache__/
 datasets/sodaSet/__pycache__/
+
+.env

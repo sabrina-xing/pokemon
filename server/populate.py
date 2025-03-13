@@ -1,11 +1,23 @@
 import mysql.connector
 import csv
+import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Get database credentials
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+DB_NAME = os.getenv("DB_NAME", "pokepals")
+
 db = mysql.connector.connect(
-    host="localhost",
-    user="root", # put your username here please
-    passwd="", # put your password here please
-    database="pokepals" # put your database name here 
+    host=DB_HOST,
+    user=DB_USER,
+    passwd=DB_PASSWORD,
+    database=DB_NAME
 )
 
 mycursor = db.cursor()
@@ -90,7 +102,7 @@ for query in schema:
 def convert_date(date_str):
     return datetime.strptime(date_str, "%m/%d/%Y").strftime("%Y-%m-%d")
 
-with open('../pokemon-production.csv', 'r') as csvfile:
+with open('../database/pokemon_card_production.csv', 'r') as csvfile:
     csvreader = csv.reader(csvfile)
     next(csvreader)
 
