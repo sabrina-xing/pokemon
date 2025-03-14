@@ -26,12 +26,16 @@ interface Pokemon {
   image_url: string;
 }
 
+const POKEMON_PER_PAGE = 12;
+
 export default function Dashboard() {
   const [pokemonCards, setPokemonCards] = useState<Pokemon[]>([])
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Filter Pokémon based on search & type
   const filteredPokemon = pokemonData.filter((pokemon) =>
@@ -48,6 +52,7 @@ export default function Dashboard() {
 
       const data: Pokemon[] = await response.json();
       setPokemonCards(data);
+      setTotalPages(Math.ceil(data.length / POKEMON_PER_PAGE)); // Calculate total pages
     } catch (err) {
       setError("Error fetching Pokémon cards.");
       console.error(err);
@@ -61,17 +66,26 @@ export default function Dashboard() {
     fetchPokemon();
   }, [fetchPokemon]);
 
+  // Get Pokémon for the current page
+  const indexOfLastPokemon = currentPage * POKEMON_PER_PAGE;
+  const indexOfFirstPokemon = indexOfLastPokemon - POKEMON_PER_PAGE;
+  const currentPokemon = pokemonCards.slice(indexOfFirstPokemon, indexOfLastPokemon);
+
+  // Pagination handlers
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
   return (
     <div
-      className="min-h-screen bg-gray-100 bg-cover bg-center"
+      className="min-h-screen bg-cover bg-center"
       // className="flex items-center justify-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/bgs/dashboard.png')" }}
+      // style={{ backgroundImage: "url('/bgs/dashboard.png')" }}
     >
-      {/* Navbar */}
-      <div className="relative p-4">
-        <Navbar />
-      </div>
-
       {/* Search Bar & Filters */}
       <div className="max-w-6xl mx-auto p-6 flex gap-6">
         {/* Left Sidebar: Search & Filters */}
@@ -87,14 +101,37 @@ export default function Dashboard() {
               <p className="text-center text-black">Loading Pokémon...</p>
             ) : error ? (
               <p className="text-center text-red-500">{error}</p>
-            ) : pokemonCards.length > 0 ? (
-              pokemonCards.map((pokemon) => (
+            ) : currentPokemon.length > 0 ? (
+              currentPokemon.map((pokemon) => (
                 <PokemonCard key={pokemon.card_id} pokemon={pokemon} />
               ))
             ) : (
               <p className="text-center text-black col-span-full">No Pokémon found.</p>
             )}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-4 space-x-4 text-sm">
+              <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 text-black rounded-lg ${currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
+              >
+                ← Previous
+              </button>
+              <span className="text-black py-2">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 text-black rounded-lg ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
+              >
+                Next →
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
