@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "../components/navbar";
 import PokemonCard from "../components/pokemoncard";
 
 interface Pokemon {
