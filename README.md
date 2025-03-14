@@ -1,4 +1,4 @@
-![image 109](https://github.com/user-attachments/assets/d7d8b2ea-2772-4aff-9da7-3190ac06f9e6)
+![image 110](https://github.com/user-attachments/assets/eee1f35b-7d18-43b2-946c-bfd6eecb7ad7)
 
 ## Features
 - User profile creation with login/signup authentication
