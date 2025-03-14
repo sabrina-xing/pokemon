@@ -85,3 +85,31 @@ _(localhost:3000 by default)_
 ![trade pokemons page](https://github.com/user-attachments/assets/c96bde6d-cb7a-46a3-90ee-56c50fb64b9f)
 ![upload new card page](https://github.com/user-attachments/assets/42a020ee-08bf-43b9-9e91-e6ff4d3cdaae)
 
+### Backend
+## Create DB
+1. install mysql (https://dev.mysql.com/downloads/installer/)
+2. install mysql (https://dev.mysql.com/downloads/shell/)
+3. for MacOS use Homebrew
+   - `brew install mysql`
+4. `pip install mysql-connector-python`
+5. Create a new db using mysql
+   - Open command line or mysql shell
+   - Open MySQL Shell: `mysql -u root -p`
+   - `CREATE DATABASE [your database name]`
+   - `use pokepals`
+
+## Populate Database
+6. Replace `user`, `passwd`, and `database` with your username, password, and database name in the popu
+   ```python
+   db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="",
+    database="[your db name here]"
+   )
+   ```
+7. Run the data population script. This will create the needed tables in the database as well as populate the
+   tables with data from the csvs.
+   `python3 populate.py`
+   If it works, the output in the terminal should be all Pikachus in the deck :> 
+

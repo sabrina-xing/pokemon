@@ -1,0 +1,9 @@
+/__pycache__/
+
+/venv
+/__pycache__
+datasets/moneySet/__pycache__/
+datasets/phoneSet/__pycache__/
+datasets/sodaSet/__pycache__/
+
+.env

@@ -80,3 +80,7 @@ body {
   -webkit-text-stroke: 1px black;
   color: white;
 }
+
+.font-joystix {
+  font-family: "Joystix", sans-serif;
+}

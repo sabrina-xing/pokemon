@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Signup() {
+    const [name, setName] = useState(""); // 🔹 Added name field
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -14,7 +15,8 @@ export default function Signup() {
         e.preventDefault();
         setError(null);
 
-        if (!email || !password || !confirmPassword) {
+        // 🔹 Validate inputs
+        if (!name || !email || !password || !confirmPassword) {
             setError("Please fill out all fields.");
             return;
         }
@@ -25,10 +27,10 @@ export default function Signup() {
         }
 
         try {
-            const response = await fetch("/api/auth/signup", {
+            const response = await fetch("/api/auth/signup", { // 🔹 Use correct API path
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password, name }),
+                body: JSON.stringify({ name, email, password }),
             });
 
             const data = await response.json();
@@ -38,22 +40,15 @@ export default function Signup() {
             }
 
             console.log("✅ User Created:", data);
-            router.push("/login");
+            router.push("/dashboard"); // 🔹 Redirect to dashboard page after successful signup
         } catch (err) {
             setError("Something went wrong.");
         }
-
-        console.log("✅ Signup Successful:", { email, password });
-
-        // Simulate signup (replace with API request)
-        router.push("/dashboard");
     };
 
     return (
-        <div
-            className="flex items-center justify-center min-h-screen bg-cover bg-center"
-            style={{ backgroundImage: "url('/bgs/login.png')" }}
-        >
+        <div className="flex items-center justify-center min-h-screen bg-cover bg-center"
+             style={{ backgroundImage: "url('/bgs/login.png')" }}>
             <div className="p-6 rounded-lg w-96">
                 <div className="flex justify-center mb-8">
                     <img src="/pokemonlogo.png" alt="Pokémon Logo" className="w-74 h-auto" />
@@ -65,6 +60,15 @@ export default function Signup() {
                 {error && <p className="text-red-500 text-sm text-center mb-2">{error}</p>}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    <input
+                        type="text"
+                        placeholder="Username" // 🔹 Added username field
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        className="w-full px-4 py-2 border-2 rounded-lg focus:ring-2 focus:ring-blue-400 bg-white text-black"
+                    />
+
                     <input
                         type="email"
                         placeholder="Email"
@@ -92,18 +96,14 @@ export default function Signup() {
                         className="w-full px-4 py-2 border-2 rounded-lg focus:ring-2 focus:ring-blue-400 bg-white text-black"
                     />
 
-                    <button
-                        type="submit"
-                        className="w-full text-white text-xl px-4 py-2 rounded-lg"
-                    >
+                    <button type="submit"
+                            className="w-full text-white text-xl px-4 py-2 rounded-lg">
                         SIGN UP
                     </button>
                 </form>
 
-                <button
-                    onClick={() => router.push("/login")}
-                    className="w-full text-white px-4 py-1 rounded-lg mt-4"
-                >
+                <button onClick={() => router.push("/login")}
+                        className="w-full text-white px-4 py-1 rounded-lg mt-4">
                     or login here
                 </button>
             </div>
