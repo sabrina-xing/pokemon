@@ -29,6 +29,7 @@ Before you begin, ensure you have met the following requirements:
    - `use [your database name]`
 
 **Populate database**
+
 6. Replace `user`, `passwd`, and `database` with your username, password, and database name in the popu
    ```python
    db = mysql.connector.connect(
