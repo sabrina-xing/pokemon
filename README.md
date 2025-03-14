@@ -1,4 +1,4 @@
-![PokePals Banner](https://github.com/user-attachments/assets/ec5a9299-559f-499a-85a0-95a4d1303ab7)
+![image 111](https://github.com/user-attachments/assets/70e46518-782e-4468-98ba-c8552398c89b)
 Welcome to PokéPals! A full-stack app where you can collect, gift, and gamble for Pokémon cards, search and filter collections, and personalize your dashboard to showcase your favorites.
 
 ## Features
