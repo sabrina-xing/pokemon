@@ -1,4 +1,4 @@
-![image 110](https://github.com/user-attachments/assets/eee1f35b-7d18-43b2-946c-bfd6eecb7ad7)
+![PokePals Banner](https://github.com/user-attachments/assets/ec5a9299-559f-499a-85a0-95a4d1303ab7)
 
 ## Features
 - User profile creation with login/signup authentication
