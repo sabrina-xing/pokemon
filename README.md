@@ -89,7 +89,7 @@ npm install
     ```
 
 
-### Starting the server
+## Starting the server
 
 _(127.0.0.1:5000 by default)_
 
