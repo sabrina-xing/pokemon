@@ -2,7 +2,7 @@
 Welcome to PokéPals! A full-stack app where you can collect, gift, and gamble for Pokémon cards, search and filter collections, and personalize your dashboard to showcase your favorites.
 
 ## Features
-- User profile creation with login/signup authentication
+- User profile creation with signup and login authentication
 - Filtering and searching for pokemon cards, through other people's cards (in `/dashboard` page) and through the user's cards as well
 - Gifting and requesting Pokemon cards to/from other users
 
