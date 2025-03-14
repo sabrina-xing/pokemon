@@ -1,4 +1,4 @@
-# Pokemon Trading SIte
+![image 108](https://github.com/user-attachments/assets/8db9de7d-6d2c-4fe7-9659-34c34b666c6e)
 
 ## Features
 - User profile creation with login/signup authentication
