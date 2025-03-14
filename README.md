@@ -1,5 +1,5 @@
 ![PokePals Banner](https://github.com/user-attachments/assets/ec5a9299-559f-499a-85a0-95a4d1303ab7)
-Welcome to PokéPals! In this full-stack app, you can collect, gift, and gamble for Pokémon cards, search and filter collections, manage your inventory, and personalize your dashboard to showcase your favorites.
+Welcome to PokéPals! A full-stack app where you can collect, gift, and gamble for Pokémon cards, search and filter collections, manage your inventory, and personalize your dashboard to showcase your favorites.
 
 ## Features
 - User profile creation with login/signup authentication
