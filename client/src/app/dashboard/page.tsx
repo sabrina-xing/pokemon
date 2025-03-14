@@ -116,7 +116,7 @@ export default function Dashboard() {
               <button
                 onClick={prevPage}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 text-black rounded-lg ${currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
+                className={`px-4 py-2 text-black rounded-lg border-2 ${currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
               >
                 ← Previous
               </button>
@@ -126,7 +126,7 @@ export default function Dashboard() {
               <button
                 onClick={nextPage}
                 disabled={currentPage === totalPages}
-                className={`px-4 py-2 text-black rounded-lg ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
+                className={`px-4 py-2 text-black rounded-lg border-2 ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
               >
                 Next →
               </button>

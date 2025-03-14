@@ -14,10 +14,10 @@ export default function Navbar() {
       <div className="relative flex justify-between items-center max-w-6xl mx-auto px-6">
         <h1 className="text-2xl font-bold">PokéPals</h1>
 
-        <div className="flex w-1/2 justify-evenly font-bold">
+        <div className="flex w-2/3 justify-evenly font-bold">
           <a href="/dashboard" className="hover:text-gray-300">TRADING DASHBOARD</a>
           <a href="/add-card" className="hover:text-gray-300">ADD CARD</a>
-          <a href="/gift-request" className="hover:text-gray-300">GIFT CARDS</a>
+          <a href="/gift-request" className="hover:text-gray-300">GIFT & REQUEST</a>
           {/* <a href="/profile" className="hover:text-gray-300">PROFILE</a> */}
         </div>
       </div>
