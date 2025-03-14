@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 
-export default function SearchBar({ onResults }: { onResults: (data: any[]) => void }) {
+interface SearchBarProps {
+  onSearch: (queryParams: string) => void;
+}
+
+export default function SearchBar({ onSearch }: SearchBarProps) {
   const [searchParams, setSearchParams] = useState({
     pname: "",
     set_name: "",
@@ -11,37 +15,28 @@ export default function SearchBar({ onResults }: { onResults: (data: any[]) => v
     pokemon_type: "",
     subtype: "",
   });
-  const [loading, setLoading] = useState(false);
-
-  // API call when search params change (debounced)
-  useEffect(() => {
-    const delayDebounce = setTimeout(async () => {
-      setLoading(true);
-      try {
-        const queryString = new URLSearchParams(
-          Object.entries(searchParams).filter(([_, value]) => value)
-        ).toString();
-
-        const response = await fetch(`http://127.0.0.1:5000/search_pokemon?${queryString}`);
-        const data = await response.json();
-        onResults(data);
-      } catch (error) {
-        console.error("Search error:", error);
-      } finally {
-        setLoading(false);
-      }
-    }, 300); // Debounce (waits 300ms before sending request)
-
-    return () => clearTimeout(delayDebounce);
-  }, [searchParams, onResults]);
 
   // Update search state
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSearchParams((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Build query string and fetch Pokémon when search params change
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      const queryString = new URLSearchParams(
+        Object.entries(searchParams).filter(([_, value]) => value.trim())
+      ).toString();
+
+      onSearch(queryString ? `?${queryString}` : "");
+    }, 300); // Debounce time
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchParams, onSearch]);
+
   return (
-    <div className="w-full p-4 rounded-lg bg-[#F8F8CD]">
+    <div className="w-full p-4 rounded-lg bg-[#F8F8CD] border-2 border-gray-300 shadow-md">
+      {/* Search Input */}
       <input
         type="text"
         name="pname"
@@ -51,6 +46,7 @@ export default function SearchBar({ onResults }: { onResults: (data: any[]) => v
         className="w-full px-4 py-2 border rounded-lg bg-white"
       />
 
+      {/* Filters */}
       <select name="set_name" className="w-full mt-2 px-4 py-2 border rounded-lg bg-white" onChange={handleChange}>
         <option value="">All Sets</option>
         <option value="Set 1">Set 1</option>
@@ -81,8 +77,6 @@ export default function SearchBar({ onResults }: { onResults: (data: any[]) => v
         <option value="Common">Common</option>
         <option value="Rare">Rare</option>
       </select>
-
-      {loading && <p className="text-center text-gray-500 mt-2">Loading...</p>}
     </div>
   );
 }
