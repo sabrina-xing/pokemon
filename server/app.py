@@ -154,5 +154,64 @@ def gift_card():
 
     return jsonify({"message": "Card gifted successfully"})
 
+# Function to request card (transfers card to reciever)
+@app.route('/request_card', methods=['POST'])
+def request_card():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.json
+    requester_id = data.get('receiver_id')
+    sender_id = data.get('sender_id')
+    card_id = data.get('card_id')
+
+    # Error handling to ensure sender and reciever exists
+    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (sender_id,))
+    sender_exists = cursor.fetchone()[0] > 0
+
+    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (requester_id,))
+    requester_exists = cursor.fetchone()[0] > 0
+
+    if not sender_exists or not requester_exists:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender or requester does not exist"}), 400
+    
+    # prevent self-transfers
+    if sender_id == requester_id:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender and requester cannot be the same"}), 400
+    
+    # Check if sender owns card
+    cursor.execute("""
+        SELECT receiver_id 
+        FROM transaction 
+        WHERE card_id = %s 
+        ORDER BY tdate DESC 
+        LIMIT 1
+    """, (card_id,))
+
+    latest_owner = cursor.fetchone()
+
+    if not latest_owner or latest_owner != sender_id:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender does not own card"})
+    
+    # Transfer the card
+    query = """INSERT INTO transaction 
+        (card_id, sender_id, receiver_id, tdate)
+        VALUES (%s, %s, %s, NOW())"""
+    cursor.execut(query, (card_id, sender_id, requester_id))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Card requested successfully"})
+    
+
+
 if __name__ == '__main__':
     app.run(debug=True)
