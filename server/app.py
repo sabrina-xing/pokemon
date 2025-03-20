@@ -52,10 +52,17 @@ def search_pokemon():
         rarity = request.args.getlist('rarity')
         pokemon_type = request.args.getlist('pokemon_type')
         subtype = request.args.get('subtype', default=None, type=str)
-
         # Validate inputs (Optional)
-        if card_id and not card_id.isalnum():
-            return jsonify({"error": "Invalid card_id format"}), 400
+        if card_id:
+            hyphen_count = card_id.count("-")
+            if hyphen_count != 1:
+                 return jsonify({"error": "Invalid card_id format"}), 400
+            hyphen_index = card_id.find("-")
+            if card_id[-1] == "-":
+                 return jsonify({"error": "Invalid card_id format"}), 400
+            if card_id[:hyphen_index].isalnum() == False or card_id[hyphen_index + 1: ].isalnum() == False:
+                return jsonify({"error": "Invalid card_id format"}), 400
+           
         if pname and not pname.replace(" ", "").isalpha():
             return jsonify({"error": "Invalid pname format"}), 400
 
@@ -70,8 +77,8 @@ def search_pokemon():
             query += " AND pname LIKE %s"
             params.append(f"%{pname}%")
         if set_name:
-            query += " AND set_name LIKE %s"
-            params.append(f"%{set_name}%")
+            query += " AND set_name=%s"
+            params.append(f"{set_name}")
         if generation:
             query += " AND generation IN (" + ", ".join(["%s"] * len(generation)) + ")"
             params.extend(generation)
@@ -80,23 +87,23 @@ def search_pokemon():
             params.extend(rarity)
         if pokemon_type:
             query += " AND pokemon_type IN (" + ", ".join(["%s"] * len(pokemon_type)) + ")"
+            
             params.extend(pokemon_type)
         if subtype:
-            query += " AND subtype LIKE %s"
-            params.append(f"%{subtype}%")
-
+            query += " AND subtype=%s"
+            params.append(f"{subtype}")
         # Execute query
+        print(query)
+        print(params)
         cursor.execute(query, params)
         results = cursor.fetchall()
 
         # Close connection
         cursor.close()
         conn.close()
-
         # Handle case when no results are found
         if not results:
-            return jsonify({"message": "No Pokémon found"}), 404
-
+            return jsonify({"message": "No Pokémon found"}), 200
         return jsonify(results)
 
     except mysql.connector.Error as e:

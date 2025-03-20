@@ -48,14 +48,22 @@ export default function Dashboard() {
     setError(null);
     try {
       const response = await fetch(`http://127.0.0.1:5000/search_pokemon${queryParams}`);
-      if (!response.ok) throw new Error("Failed to fetch Pokémon cards.");
+
+      if (!response.ok) throw new Error("No Pokémon cards found");
 
       const data: Pokemon[] = await response.json();
+
+      if (!data.length) {
+        setError("No Pokémon cards found");
+        throw new Error("No Pokemon cards found");
+
+      }
       setPokemonCards(data);
       setTotalPages(Math.ceil(data.length / POKEMON_PER_PAGE)); // Calculate total pages
     } catch (err) {
-      setError("Error fetching Pokémon cards.");
-      console.error(err);
+      if (err instanceof Error) {
+        setError(err.message);  // Set the error message
+      }
     } finally {
       setLoading(false);
     }
@@ -87,15 +95,17 @@ export default function Dashboard() {
       // style={{ backgroundImage: "url('/bgs/dashboard.png')" }}
     >
       {/* Search Bar & Filters */}
-      <div className="max-w-6xl mx-auto p-6 flex gap-6">
+      <div className="max-w-7xl mx-auto p-6 flex flex-col gap-6">
         {/* Left Sidebar: Search & Filters */}
-        <div className="w-1/4 py-8 px-2 text-black rounded-lg text-sm shadow-md bg-[#F4E094] border-2 border-[#60606F]">
+        <div className="w-full py-6 px-2 text-black rounded-lg text-sm shadow-md bg-[#F4E094] border-2 border-[#60606F]">
           {/* <SearchBar onResults={setPokemonCards} /> */}
+          <h1 className="text-lg font-bold ml-2 mb-2 text-[#784426]">POKÉMON SEARCH</h1>
           <SearchBar onSearch={fetchPokemon} />
         </div>
 
         {/* Right Section: Pokémon Cards Grid */}
-        <div className="w-3/4 py-8 px-2 bg-[#F4E094] border-2 border-[#60606F] rounded-lg shadow-md">
+        <div className="w-full py-6 px-2 bg-[#F4E094] border-2 border-[#60606F] rounded-lg shadow-md">
+          <h1 className="text-lg font-bold ml-2 mb-2 text-[#784426]">RESULTS</h1>
           <div className="bg-[#F8F8CD] py-8 px-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             {loading ? (
               <p className="text-center text-black">Loading Pokémon...</p>
