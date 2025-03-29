@@ -3,9 +3,7 @@ from flask import Response
 from bson import Binary 
 import base64, binascii
 import io
-# from datasets.moneySet.moneyModel import predictMoney
-# from datasets.sodaSet.sodaModel import predictSoda
-# from datasets.phoneSet.phoneModel import predictPhone
+import re
 from PIL import Image
 from flask_cors import CORS
 import os
@@ -31,8 +29,6 @@ DB_CONFIG = {
 
 def get_db_connection():
     return mysql.connector.connect(**DB_CONFIG)
-
-# TO DO: STARTER FUNCTIONS FOR TESTING
 
 # Function for searching/filtering pokemon cards
 @app.route('/search_pokemon', methods=['GET'])
@@ -67,8 +63,175 @@ def search_pokemon():
             return jsonify({"error": "Invalid pname format"}), 400
 
         # Start building the query dynamically
-        query = "SELECT * FROM pokemon_card WHERE 1=1"
+        query = """
+            SELECT pc.*, COALESCE(o.uid, NULL) AS owner_uid
+            FROM pokemon_card pc
+            LEFT JOIN ownership o ON pc.card_id = o.card_id
+            WHERE 1=1
+        """
         params = []
+
+        if card_id:
+            query += " AND card_id = %s"
+            params.append(card_id)
+        if pname:
+            query += " AND pname LIKE %s"
+            params.append(f"%{pname}%")
+        if set_name:
+            query += " AND set_name=%s"
+            params.append(f"{set_name}")
+        if generation:
+            query += " AND generation IN (" + ", ".join(["%s"] * len(generation)) + ")"
+            params.extend(generation)
+        if rarity:
+            query += " AND rarity IN (" + ", ".join(["%s"] * len(rarity)) + ")"
+            params.extend(rarity)
+        if pokemon_type:
+            query += " AND pokemon_type IN (" + ", ".join(["%s"] * len(pokemon_type)) + ")"
+            
+            params.extend(pokemon_type)
+        if subtype:
+            query += " AND subtype=%s"
+            params.append(f"{subtype}")
+        # Execute query
+        print(query)
+        print(params)
+        cursor.execute(query, params)
+        results = cursor.fetchall()
+
+        # Close connection
+        cursor.close()
+        conn.close()
+        # Handle case when no results are found
+        if not results:
+            return jsonify({"message": "No Pokémon found"}), 200
+        return jsonify(results)
+
+    except mysql.connector.Error as e:
+        print(f"Database query error: {e}")
+        return jsonify({"error": "Database query failed"}), 500
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({"error": "Something went wrong"}), 500
+
+@app.route('/view_account', methods=['GET'])
+def view_account():
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+    
+    cursor = conn.cursor(dictionary=True)
+    
+    # Extract user ID from request
+    uid = request.args.get('uid', type=int)
+    if not uid:
+        return jsonify({"error": "User ID (uid) is required"}), 400
+
+    # Query account information
+    query = "SELECT * FROM account WHERE uid = %s"
+    cursor.execute(query, (uid,))
+    user_data = cursor.fetchone()
+
+    # Close connection
+    cursor.close()
+    conn.close()
+
+    # Handle case where user does not exist
+    if not user_data:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify(user_data)
+
+# Email validation function using regex
+def is_valid_email(email):
+    email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    return re.match(email_regex, email) is not None
+
+@app.route('/update_account', methods=['POST'])
+def update_account():
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+    
+    cursor = conn.cursor()
+
+    # Extract JSON data from request
+    data = request.json
+    uid = data.get("uid")
+
+    if not uid:
+        return jsonify({"error": "User ID (uid) is required"}), 400
+
+    # Allowed fields for update
+    allowed_fields = ["username", "email", "password", "bio", "pfp"]
+    
+    # Filter out fields that should not be updated
+    updates = {key: value for key, value in data.items() if key in allowed_fields and value is not None}
+
+    if not updates:
+        return jsonify({"error": "No valid fields provided for update"}), 400
+    
+    # Check email format if email is being updated
+    if "email" in updates and not is_valid_email(updates["email"]):
+        return jsonify({"error": "Invalid email format"}), 400
+
+    # Build query dynamically
+    set_clause = ", ".join(f"{key} = %s" for key in updates.keys())
+    query = f"UPDATE account SET {set_clause} WHERE uid = %s"
+    
+    # Execute query
+    try:
+        cursor.execute(query, list(updates.values()) + [uid])
+        conn.commit()
+    except mysql.connector.Error as err:
+        return jsonify({"error": str(err)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify({"message": "Account updated successfully"})
+
+@app.route('/user_pokemon', methods=['GET'])
+def get_user_pokemon():
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+    
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        # Extract query parameters
+        uid = request.args.get("uid", type=int)
+        card_id = request.args.get('card_id', default=None, type=str)
+        pname = request.args.get('pname', default=None, type=str)
+        set_name = request.args.get('set_name', default=None, type=str)
+        generation = request.args.getlist('generation')
+        rarity = request.args.getlist('rarity')
+        pokemon_type = request.args.getlist('pokemon_type')
+        subtype = request.args.get('subtype', default=None, type=str)
+        # Validate inputs (Optional)
+        if card_id:
+            hyphen_count = card_id.count("-")
+            if hyphen_count != 1:
+                 return jsonify({"error": "Invalid card_id format"}), 400
+            hyphen_index = card_id.find("-")
+            if card_id[-1] == "-":
+                 return jsonify({"error": "Invalid card_id format"}), 400
+            if card_id[:hyphen_index].isalnum() == False or card_id[hyphen_index + 1: ].isalnum() == False:
+                return jsonify({"error": "Invalid card_id format"}), 400
+           
+        if pname and not pname.replace(" ", "").isalpha():
+            return jsonify({"error": "Invalid pname format"}), 400
+
+        # Start building the query dynamically
+        query = """
+            SELECT pc.*
+            FROM ownership o
+            JOIN pokemon_card_sample pc ON o.card_id = pc.card_id
+            WHERE o.uid = %s
+        """
+        params = [uid]
 
         if card_id:
             query += " AND card_id = %s"
