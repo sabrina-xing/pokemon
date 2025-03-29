@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import pool from "../../../../../lib/db"; // MySQL connection
+import pool from "../../../lib/db"; // MySQL connection
 
 // ✅ MySQL Table Schema (for reference)
 // CREATE TABLE account (

@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { JWT } from "next-auth/jwt";
-import pool from "../../../../../lib/db"; // Ensure `db.ts` is set up correctly
+import pool from "../../../lib/db"; // Ensure `db.ts` is set up correctly
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -66,3 +66,4 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
+
