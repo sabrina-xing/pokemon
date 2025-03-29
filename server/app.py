@@ -284,14 +284,19 @@ def gift_card():
     cursor = conn.cursor()
 
     data = request.json
-    sender_id = data.get('sender_id')
-    receiver_id = data.get('receiver_id')
+    sender_username = data.get('sender_username')
+    receiver_username = data.get('receiver_username')
     card_id = data.get('card_id')
 
+    # Get userid from usernames
+    cursor.execute("SELECT uid FROM account WHERE username = %s", (receiver_username,))
+    receiver_id = cursor.fetchone()[0] > 0
+    cursor.execute("SELECT uid FROM account WHERE username = %s", (sender_username,))
+    sender_id = cursor.fetchone()[0] > 0
 
     # Error handling
     # check if sender and receiver exist in the account table
-    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (sender_id,))
+    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (sender_id,))        
     sender_exists = cursor.fetchone()[0] > 0
 
     cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (receiver_id,))
@@ -303,7 +308,7 @@ def gift_card():
         return jsonify({"error": "Sender or receiver does not exist"}), 400
 
     # prevent self-transfers
-    if sender_id == receiver_id:
+    if sender_uid == receiver_uid:
         cursor.close()
         conn.close()
         return jsonify({"error": "Sender and receiver cannot be the same"}), 400
@@ -330,11 +335,11 @@ def gift_card():
             return jsonify({"error": "Card does not exist"}), 400
 
         # if card exists but never been traded, assume original ownership
-        original_owner = sender_id
+        original_owner = sender_uid
     else:
         original_owner = latest_owner[0]
 
-    if original_owner != sender_id:
+    if original_owner != sender_uid:
         cursor.close()
         conn.close()
         return jsonify({"error": "Sender does not own this card"}), 400
@@ -348,7 +353,7 @@ def gift_card():
     cursor.close()
     conn.close()
 
-    return jsonify({"message": "Card gifted successfully"})
+    return jsonify({"message": "Card gift sent successfully"})
 
 # Function to request card (transfers card to reciever)
 @app.route('/request_card', methods=['POST'])
@@ -357,9 +362,15 @@ def request_card():
     cursor = conn.cursor()
 
     data = request.json
-    requester_id = data.get('receiver_id')
-    sender_id = data.get('sender_id')
+    sender_username = data.get('sender_username')
+    receiver_username = data.get('receiver_username')
     card_id = data.get('card_id')
+
+    # Get userid from usernames
+    cursor.execute("SELECT uid FROM account WHERE username = %s", (receiver_username,))
+    receiver_id = cursor.fetchone()[0] > 0
+    cursor.execute("SELECT uid FROM account WHERE username = %s", (sender_username,))
+    sender_id = cursor.fetchone()[0] > 0
 
     # Error handling to ensure sender and reciever exists
     cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (sender_id,))

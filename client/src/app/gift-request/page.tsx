@@ -8,6 +8,8 @@ export default function GiftRequest() {
   const [receiverUsername, setReceiverUsername] = useState("");
   const [senderUsername, setSenderUsername] = useState("");
   const [requestCardId, setRequestCardId] = useState("");
+  const [requestReceiverUsername, setRequestReceiverUsername] = useState("");
+  const [requestSenderUsername, setRequestSenderUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +24,11 @@ export default function GiftRequest() {
       const response = await fetch("http://127.0.0.1:5000/gift_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ card_id: cardId, receiver_username: receiverUsername }),
+        body: JSON.stringify({ 
+          card_id: cardId, 
+          receiver_username: receiverUsername,
+          sender_username: senderUsername
+           }),
       });
 
       const data = await response.json();
@@ -47,7 +53,10 @@ export default function GiftRequest() {
       const response = await fetch("http://127.0.0.1:5000/request_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ card_id: requestCardId, sender_username: senderUsername }),
+        body: JSON.stringify({ 
+          card_id: requestCardId, 
+          sender_username: requestSenderUsername,
+          receiver_username: requestReceiverUsername, }),
       });
 
       const data = await response.json();
@@ -79,6 +88,13 @@ export default function GiftRequest() {
         />
         <input
           type="text"
+          placeholder="Sender's Username"
+          value={senderUsername}
+          onChange={(e) => setSenderUsername(e.target.value)}
+          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
+        />
+        <input
+          type="text"
           placeholder="Receiver's Username"
           value={receiverUsername}
           onChange={(e) => setReceiverUsername(e.target.value)}
@@ -106,8 +122,15 @@ export default function GiftRequest() {
         <input
           type="text"
           placeholder="Sender's Username"
-          value={senderUsername}
-          onChange={(e) => setSenderUsername(e.target.value)}
+          value={requestSenderUsername}
+          onChange={(e) => setRequestSenderUsername(e.target.value)}
+          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
+        />
+        <input
+          type="text"
+          placeholder="Receiver's Username"
+          value={requestReceiverUsername}
+          onChange={(e) => setRequestReceiverUsername(e.target.value)}
           className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
         />
         <button
