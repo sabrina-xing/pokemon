@@ -1,9 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import pool from "../../../../../lib/db"; // MySQL connection
+import { JWT } from "next-auth/jwt";
+import pool from "../../../../../lib/db"; // Ensure `db.ts` is set up correctly
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -13,44 +14,54 @@ export const authOptions = {
       },
       async authorize(credentials) {
         try {
-          const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [credentials?.email]);
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("Missing email or password");
+          }
 
-          if ((users as any[]).length === 0) {
+          // ✅ Query MySQL `account` table for user
+          const [users]: any[] = await pool.query("SELECT * FROM account WHERE email = ?", [credentials.email]);
+
+          if (users.length === 0) {
             throw new Error("User not found");
           }
 
-          const user = (users as any[])[0];
+          const user = users[0];
 
-          const isMatch = await bcrypt.compare(credentials.password, user.password);
+          // ✅ Validate password
+          const isMatch = await bcrypt.compare(credentials.password, user.usr_password);
           if (!isMatch) {
             throw new Error("Invalid credentials");
           }
 
-          return { id: user.id, email: user.email, name: user.name };
+          return { id: user.uid.toString(), name: user.username, email: user.email };
         } catch (error) {
-          console.error("Error during login:", error);
+          console.error("Login Error:", error);
           return null;
         }
       },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) token.id = user.id;
+    async jwt({ token, user }: { token: JWT; user?: any }) {
+      if (user) {
+        token.id = user.id;
+        token.username = user.name;
+        token.email = user.email ?? "";
+      }
       return token;
     },
-    async session({ session, token }) {
-      session.user.id = token.id;
+    async session({ session, token }: { session: any; token: JWT }) {
+      session.user = {
+        id: token.id as string,
+        name: token.username as string,
+        email: token.email as string, // Ensure it's a string
+      };
       return session;
     },
   },
-  pages: {
-    signIn: "/login",
-  },
+  pages: { signIn: "/login" },
 };
 
 const handler = NextAuth(authOptions);

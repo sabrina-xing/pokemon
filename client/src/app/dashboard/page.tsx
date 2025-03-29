@@ -1,33 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Navbar from "../components/navbar";
 import PokemonCard from "../components/pokemoncard";
 import { getServerSession } from "next-auth";
 // import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { authOptions } from "../lib/auth";
+import SearchBar from "../components/searchbar";
 
-// Sample Pokémon Data (Replace with API Fetch Later)
 const pokemonData = [
-  { id: 1, name: "Pikachu", type: "Electric", rarity: "Common", image: "/pikachu.png" },
-  { id: 2, name: "Charizard", type: "Fire", rarity: "Rare", image: "/charizard.png" },
-  { id: 3, name: "Bulbasaur", type: "Grass", rarity: "Common", image: "/bulbasaur.png" },
-  { id: 4, name: "Mewtwo", type: "Psychic", rarity: "Legendary", image: "/mewtwo.png" },
+  { id: 1, name: "Pikachu", type: "Electric", subtype: "Common", rarity: "Rare 1", generation: "Gen 1", set_name: "Set 1", image: "/pikachu.png" },
+  { id: 2, name: "Charizard", type: "Fire", subtype: "Rare", rarity: "Rare 2", generation: "Gen 2", set_name: "Set 2", image: "/charizard.png" },
+  { id: 3, name: "Bulbasaur", type: "Grass", subtype: "Common", rarity: "Rare 3", generation: "Gen 3", set_name: "Set 3", image: "/bulbasaur.png" },
+  { id: 4, name: "Mewtwo", type: "Psychic", subtype: "Legendary", rarity: "Rare 4", generation: "Gen 4", set_name: "Set 4", image: "/mewtwo.png" },
 ];
 
-// export default async function Dashboard() {
-//   const session = await getServerSession(authOptions);
+interface Pokemon {
+  card_id: string;
+  pname: string;
+  pokemon_type: string;
+  subtype: string;
+  rarity: string;
+  generation: string;
+  set_name: string;
+  image_url: string;
+}
 
-//   if (!session) {
-//     return <p>You need to log in first.</p>;
-//   }
-
-//   return <h1>Welcome, {session.user?.name}!</h1>;
-// }
+const POKEMON_PER_PAGE = 12;
 
 export default function Dashboard() {
+  const [pokemonCards, setPokemonCards] = useState<Pokemon[]>([])
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Filter Pokémon based on search & type
   const filteredPokemon = pokemonData.filter((pokemon) =>
@@ -35,56 +43,105 @@ export default function Dashboard() {
     (filterType ? pokemon.type === filterType : true)
   );
 
+  const fetchPokemon = useCallback(async (queryParams = "") => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/search_pokemon${queryParams}`);
+
+      if (!response.ok) throw new Error("No Pokémon cards found");
+
+      const data: Pokemon[] = await response.json();
+
+      if (!data.length) {
+        setError("No Pokémon cards found");
+        throw new Error("No Pokemon cards found");
+
+      }
+      setPokemonCards(data);
+      setTotalPages(Math.ceil(data.length / POKEMON_PER_PAGE)); // Calculate total pages
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);  // Set the error message
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Fetch Pokémon only once when component mounts
+  useEffect(() => {
+    fetchPokemon();
+  }, [fetchPokemon]);
+
+  // Get Pokémon for the current page
+  const indexOfLastPokemon = currentPage * POKEMON_PER_PAGE;
+  const indexOfFirstPokemon = indexOfLastPokemon - POKEMON_PER_PAGE;
+  const currentPokemon = pokemonCards.slice(indexOfFirstPokemon, indexOfLastPokemon);
+
+  // Pagination handlers
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
   return (
     <div
-      className="min-h-screen bg-gray-100 bg-cover bg-center"
+      className="min-h-screen bg-cover bg-center"
       // className="flex items-center justify-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/bgs/dashboard.png')" }}
+      // style={{ backgroundImage: "url('/bgs/dashboard.png')" }}
     >
-      {/* Navbar */}
-      <div className="relative p-4">
-        <Navbar />
-      </div>
-
       {/* Search Bar & Filters */}
-      <div className="max-w-6xl mx-auto p-6 flex gap-6">
+      <div className="max-w-7xl mx-auto p-6 flex flex-col gap-6">
         {/* Left Sidebar: Search & Filters */}
-        <div className="w-1/4 py-8 px-2 text-black rounded-lg shadow-md bg-[#F4E094] border-2 border-[#60606F]">
-          <div className="bg-[#F8F8CD] py-8 px-2 ">
-            <input
-              type="text"
-              placeholder="Search Pokémon..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
-            />
-
-            <select
-              className="mt-4 w-full px-4 py-2 border rounded-lg"
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-            >
-              <option value="">All Types</option>
-              <option value="Electric">Electric</option>
-              <option value="Fire">Fire</option>
-              <option value="Grass">Grass</option>
-              <option value="Psychic">Psychic</option>
-            </select>
-          </div>
-
+        <div className="w-full py-6 px-2 text-black rounded-lg text-sm shadow-md bg-[#F4E094] border-2 border-[#60606F]">
+          {/* <SearchBar onResults={setPokemonCards} /> */}
+          <h1 className="text-lg font-bold ml-2 mb-2 text-[#784426]">POKÉMON SEARCH</h1>
+          <SearchBar onSearch={fetchPokemon} />
         </div>
 
         {/* Right Section: Pokémon Cards Grid */}
-        <div className="w-3/4 
-         py-8 px-2 bg-[#F4E094] border-2 border-[#60606F] rounded-lg shadow-md">
-          <div className="bg-[#F8F8CD] py-8 px-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
-
-            {filteredPokemon.length > 0 ? (
-              filteredPokemon.map((pokemon) => <PokemonCard key={pokemon.id} pokemon={pokemon} />)
+        <div className="w-full py-6 px-2 bg-[#F4E094] border-2 border-[#60606F] rounded-lg shadow-md">
+          <h1 className="text-lg font-bold ml-2 mb-2 text-[#784426]">RESULTS</h1>
+          <div className="bg-[#F8F8CD] py-8 px-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {loading ? (
+              <p className="text-center text-black">Loading Pokémon...</p>
+            ) : error ? (
+              <p className="text-center text-red-500">{error}</p>
+            ) : currentPokemon.length > 0 ? (
+              currentPokemon.map((pokemon) => (
+                <PokemonCard key={pokemon.card_id} pokemon={pokemon} />
+              ))
             ) : (
-              <p className="text-center text-gray-500 col-span-full">No Pokémon found.</p>
+              <p className="text-center text-black col-span-full">No Pokémon found.</p>
             )}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-4 space-x-4 text-sm">
+              <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 text-black rounded-lg border-2 ${currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
+              >
+                ← Previous
+              </button>
+              <span className="text-black py-2">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 text-black rounded-lg border-2 ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
+              >
+                Next →
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

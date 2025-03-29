@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
+// TO DO: DO I NEED TO FIX THIS ????
+
 export const authOptions = {
   providers: [
     CredentialsProvider({

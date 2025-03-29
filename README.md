@@ -1,10 +1,8 @@
-# Pokemon Trading SIte
-
-TO DO:
-- describe how to create and load your sample database to your chosen platform
+![image 111](https://github.com/user-attachments/assets/70e46518-782e-4468-98ba-c8552398c89b)
+Welcome to PokéPals! A full-stack app where you can collect, gift, and gamble for Pokémon cards, search and filter collections, and personalize your dashboard to showcase your favorites.
 
 ## Features
-- User profile creation with login/signup authentication
+- User profile creation with signup and login authentication
 - Filtering and searching for pokemon cards, through other people's cards (in `/dashboard` page) and through the user's cards as well
 - Gifting and requesting Pokemon cards to/from other users
 
@@ -15,25 +13,60 @@ The final and most up to date code for the application structure will be kept in
 ## Getting Started
 
 ### Prerequisites
-1. Before you begin, ensure you have met the following requirements:
+Before you begin, ensure you have met the following requirements:
 - [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
 - [Python](https://www.python.org/) and [pip](https://pip.pypa.io/en/stable/) installed for the backend.
 
-2. Install required dependencies in root folder and both frontend and backend folders
-Setting up `/client` folder:
-- Run:
+**1. Create and setup database**
+1. install mysql (https://dev.mysql.com/downloads/installer/)
+2. install mysql (https://dev.mysql.com/downloads/shell/)
+3. for MacOS use Homebrew
+   - `brew install mysql`
+4. `pip install mysql-connector-python`
+5. Create a new DB using mysql
+   - Open command line or mysql shell
+   - Open MySQL Shell: `mysql -u root -p`
+   - `CREATE DATABASE [your database name]`
+   - `use [your database name]`
+
+**Populate database**
+
+6. Replace `user`, `passwd`, and `database` with your username, password, and database name in the popu
+   ```python
+   db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="[your MySQL password here]",
+    database="[your db name here]"
+   )
+   ```
+7. Run the data population script. This will create the needed tables in the database as well as populate the
+   tables with data from the csvs.
+   `python3 populate.py`
+   If it works, the output in the terminal should be all Pikachus in the deck :> 
+
+
+**2. Setting up `/server` folder:**
+- Navigate to `/server` folder and create `/server/.env`, replacing each value below with your MySQL configuration:
 ```
-npm install
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_mysql_password  # Change this to your MySQL password
+DB_NAME=pokepals  # Change this to your database name
+DB_PORT=3306  # Default MySQL port
 ```
 - Create a file `/client/lib/db.ts` and add your MySQL password:
 ```
 import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "ADD YOUR PASSWORD HERE", // Change to your MySQL password
-  database: "pokemon_trading",
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "pokepals",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -41,29 +74,32 @@ const pool = mysql.createPool({
 
 export default pool;
 ```
-- Navigate to your MySQL Workbench and run the following commands to setup the necessary tables:
-```
-CREATE DATABASE pokemon_trading;
-USE pokemon_trading;
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  name VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
 
-### Starting the server
+
+**3. Setting up `/client` folder:**
+- Run:
+```
+npm install
+```
+- Set environment variables:
+  - Navigate to `/client` folder and run `openssl rand -base64 32` in your terminal to generate a secure 32-character key
+  - Create `/client/.env.local` file and add:
+    ```
+    NEXTAUTH_SECRET=<Generated Next auth key here>
+    ```
+
+
+## Starting the server
 
 _(127.0.0.1:5000 by default)_
 
 1. `cd server`
-2. `python3 -m venv venv`
-3. `source venv/bin/activate` (MacOS)
-4. `venv\Scripts\activate` (Windows Powershell)
-5. `pip install -r requirements.txt`
-6. `python3 app.py`
+2. Create a virtual environment: `python3 -m venv venv`
+3. Activate your virtual environment:
+   - `source venv/bin/activate` (MacOS)
+   - `venv\Scripts\activate` (Windows Powershell)
+6. Install requirements: `pip install -r requirements.txt`
+7. `python3 app.py`
 
 ### Starting the app
 
@@ -73,29 +109,8 @@ _(localhost:3000 by default)_
 2. `npm install`
 3. `npm start`
 
-### Interface Design 
+## Interface Design 
 
 ![login page](https://github.com/user-attachments/assets/185bc91b-79b8-4135-bcba-e47062851152)
 ![trade pokemons page](https://github.com/user-attachments/assets/c96bde6d-cb7a-46a3-90ee-56c50fb64b9f)
 ![upload new card page](https://github.com/user-attachments/assets/42a020ee-08bf-43b9-9e91-e6ff4d3cdaae)
-
-### Backend
-## Create DB
-1. install mysql (https://dev.mysql.com/downloads/installer/)
-2. install mysql (https://dev.mysql.com/downloads/shell/)
-3. for MacOS use Homebrew
-   - `brew install mysql`
-4. `pip install mysql-connector-python`
-5. Create a new db using mysql
-   - Open command line or mysql shell
-   - `mysql -u root -p`
-   - `CREATE DATABASE [your database name]`
-6. Replace `user`, `passwd`, and `database` with your username, password, and database name
-   ```python
-   db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="",
-    database="testdatabase"
-   )
-   ```

@@ -1,11 +1,23 @@
 import mysql.connector
 import csv
+import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Get database credentials
+DB_HOST = os.getenv("DB_HOST", "localhost")  # sets default value if not found
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+DB_NAME = os.getenv("DB_NAME", "pokepals")
+
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="",
-    database="testdatabase"
+    host=DB_HOST,
+    user=DB_USER,
+    passwd=DB_PASSWORD,
+    database=DB_NAME
 )
 
 mycursor = db.cursor()
@@ -17,6 +29,7 @@ schema = [
     "DROP TABLE IF EXISTS resistances;",
     "DROP TABLE IF EXISTS weaknesses;",
     "DROP TABLE IF EXISTS transaction;",
+    "DROP TABLE IF EXISTS ownership",
     "DROP TABLE IF EXISTS pokemon_card;",
     "DROP TABLE IF EXISTS account;",
 
@@ -45,6 +58,16 @@ schema = [
         flavour_text VARCHAR(255)
     );""",
 
+    """
+    CREATE TABLE ownership (
+        uid INT NOT NULL,
+        card_id VARCHAR(20) NOT NULL,
+        PRIMARY KEY (uid, card_id),
+        FOREIGN KEY(uid) REFERENCES account(uid),
+        FOREIGN KEY(card_id) REFERENCES pokemon_card(card_id)
+    );
+    """,
+
     """CREATE TABLE transaction (
         tid INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         sender_id INT NOT NULL,
@@ -54,18 +77,6 @@ schema = [
         FOREIGN KEY(sender_id) REFERENCES account(uid),
         FOREIGN KEY(receiver_id) REFERENCES account(uid),
         FOREIGN KEY(card_id) REFERENCES pokemon_card(card_id)
-    );""",
-
-    """CREATE TABLE weaknesses (
-        type_name VARCHAR(20) NOT NULL, 
-        weakness VARCHAR(20) NOT NULL, 
-        PRIMARY KEY (type_name, weakness)
-    );""",
-
-    """CREATE TABLE resistances (
-        type_name VARCHAR(20) NOT NULL, 
-        resistance VARCHAR(20) NOT NULL,
-        PRIMARY KEY (type_name, resistance)
     );""",
 
     """CREATE TABLE attacks (
@@ -90,7 +101,7 @@ for query in schema:
 def convert_date(date_str):
     return datetime.strptime(date_str, "%m/%d/%Y").strftime("%Y-%m-%d")
 
-with open('../sample-data.csv', 'r') as csvfile:
+with open('../pokemon-production.csv', 'r') as csvfile:
     csvreader = csv.reader(csvfile)
     next(csvreader)
 
@@ -120,15 +131,16 @@ with open('../sample-data.csv', 'r') as csvfile:
             )
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, data_to_insert)
+    db.commit()
     
-    mycursor.execute("SELECT * FROM pokemon_card")
+    mycursor.execute("SELECT * FROM pokemon_card WHERE pname='Pikachu'")
     
     rows = mycursor.fetchall()
     for row in rows:
         print(row)
     
 def getPokemon(card_id, pname, set_name, types, generation, evolution):
-    query = "SELECT * FROM pokemon_card" 
+    query = "SELECT * FROM pokemon_card WHERE pname='Pikachu'" 
     params = []
     whereClause = " WHERE"
 
