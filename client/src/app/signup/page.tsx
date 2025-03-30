@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Signup() {
-    const [name, setName] = useState(""); // 🔹 Added name field
+    const [name, setName] = useState(""); // Added name field
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -15,7 +15,7 @@ export default function Signup() {
         e.preventDefault();
         setError(null);
 
-        // 🔹 Validate inputs
+        // Validate inputs
         if (!name || !email || !password || !confirmPassword) {
             setError("Please fill out all fields.");
             return;
@@ -27,7 +27,7 @@ export default function Signup() {
         }
 
         try {
-            const response = await fetch("/api/auth/signup", { // 🔹 Use correct API path
+            const response = await fetch("/api/auth/signup", { // Use correct API path
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, password }),
@@ -39,8 +39,8 @@ export default function Signup() {
                 return;
             }
 
-            console.log("✅ User Created:", data);
-            router.push("/dashboard"); // 🔹 Redirect to dashboard page after successful signup
+            console.log("User Created:", data);
+            router.push("/dashboard"); // Redirect to dashboard page after successful signup
         } catch (err) {
             setError("Something went wrong.");
         }
@@ -62,7 +62,7 @@ export default function Signup() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         type="text"
-                        placeholder="Username" // 🔹 Added username field
+                        placeholder="Username" // Added username field
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required

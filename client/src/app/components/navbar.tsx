@@ -15,9 +15,27 @@ export default function Navbar() {
         <h1 className="text-2xl font-bold">PokéPals</h1>
 
         <div className="flex w-2/3 justify-evenly font-bold">
-          <a href="/dashboard" className="hover:text-gray-300">TRADING DASHBOARD</a>
-          <a href="/add-card" className="hover:text-gray-300">ADD CARD</a>
-          <a href="/gift-request" className="hover:text-gray-300">GIFT & REQUEST</a>
+          <a
+            href="/dashboard"
+            className="bg-gradient-to-b from-white to-[#F0A850] bg-clip-text text-transparent hover:opacity-80 fix-stroke drop-shadow-[0_0_2px_black]"
+          >
+            TRADING DASHBOARD
+          </a>
+
+          <a
+            href="/add-card"
+            className="bg-gradient-to-b from-white to-[#F0A850] bg-clip-text text-transparent hover:opacity-80 drop-shadow-[0_0_2px_black]"
+          >
+            ADD CARD
+          </a>
+
+          <a
+            href="/gift-request"
+            className="bg-gradient-to-b from-white to-[#F0A850] bg-clip-text text-transparent hover:opacity-80 drop-shadow-[0_0_2px_black]"
+          >
+            GIFT & REQUEST
+          </a>
+
           {/* <a href="/profile" className="hover:text-gray-300">PROFILE</a> */}
         </div>
       </div>

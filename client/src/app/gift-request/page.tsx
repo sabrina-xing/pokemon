@@ -28,7 +28,7 @@ export default function GiftRequest() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to gift card.");
 
-      setMessage(`✅ Successfully gifted card ${cardId} to ${receiverUsername}!`);
+      setMessage(`Successfully gifted card ${cardId} to ${receiverUsername}!`);
     } catch (err) {
       setError("Error gifting card. Please try again.");
       console.error(err);
@@ -53,7 +53,7 @@ export default function GiftRequest() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to request card.");
 
-      setMessage(`✅ Successfully requested card ${requestCardId} from ${senderUsername}!`);
+      setMessage(`Successfully requested card ${requestCardId} from ${senderUsername}!`);
     } catch (err) {
       setError("Error requesting card. Please try again.");
       console.error(err);
