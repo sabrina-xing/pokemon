@@ -3,4 +3,4 @@ uid,username,email,password,bio,pfp
 2,bob,bob@yahoo.com,123bob,bye,
 3,carl,carl@uwaterloo.com,123carl,hi,
 4,daisy,daisy@gmail.com,123daisy,hello world,
-5,alice,alice1@gmail.com,123alice1,hello,
+5,alice1,alice1@gmail.com,123alice1,hello,

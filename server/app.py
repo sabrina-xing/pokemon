@@ -64,9 +64,9 @@ def search_pokemon():
 
         # Start building the query dynamically
         query = """
-            SELECT pc.*, COALESCE(o.uid, NULL) AS owner_uid
+            SELECT pc.*, COALESCE(o.username, NULL) AS owner_username
             FROM pokemon_card pc
-            LEFT JOIN ownership o ON pc.card_id = o.card_id
+            LEFT JOIN card_owners o ON pc.card_id = o.card_id
             WHERE 1=1
         """
         params = []
@@ -228,7 +228,7 @@ def get_user_pokemon():
         query = """
             SELECT pc.*
             FROM ownership o
-            JOIN pokemon_card_sample pc ON o.card_id = pc.card_id
+            JOIN pokemon_card pc ON o.card_id = pc.card_id
             WHERE o.uid = %s
         """
         params = [uid]
