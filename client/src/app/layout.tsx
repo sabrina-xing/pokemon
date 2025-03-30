@@ -75,6 +75,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ClientLayout from "./components/client-layout";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "PokéPals",
@@ -92,7 +93,12 @@ export default function RootLayout({
         className="font-sans antialiased"
         style={{ backgroundImage: "url('/bgs/dashboard.png')" }}
       >
-        <ClientLayout>{children}</ClientLayout>
+        {/* <ClientLayout>{children}</ClientLayout> */}
+        <Providers>
+          <ClientLayout>
+          {children}
+          </ClientLayout>
+        </Providers>
       </body>
     </html>
   );

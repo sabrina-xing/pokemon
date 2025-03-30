@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import PokemonCard from "../components/pokemoncard";
 
@@ -18,8 +19,10 @@ export default function AddCard() {
   const [obtainedCard, setObtainedCard] = useState<Pokemon | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { data: session, status } = useSession();
 
   const getRandomCard = async () => {
+
     setLoading(true);
     setError(null);
     try {
