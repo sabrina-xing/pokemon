@@ -6,6 +6,7 @@ import giftRequest from '../../../public/buttons/gift-request.png';
 import mainLogo from '../../../public/buttons/pokepals-logo.png';
 import logout from '../../../public/buttons/logout.png';
 import nameBg from '../../../public/buttons/name-bg.png';
+import trans from '../../../public/buttons/transactions.png';
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -31,17 +32,17 @@ export default function Navbar() {
 
         <div className="flex justify-evenly font-bold">
           <a href="/dashboard">
-            <Image src={dashboard} alt="Dashboard" width={240} height={40} className="hover:opacity-80 px-2" />
+            <Image src={dashboard} alt="Dashboard" width={240} height={40} className="hover:opacity-80 px-1" />
           </a>
           <a href="/add-card">
-            <Image src={addCard} alt="Add Card" width={240} height={40} className="hover:opacity-80 px-2" />
+            <Image src={addCard} alt="Add Card" width={240} height={40} className="hover:opacity-80 px-1" />
           </a>
           <a href="/gift-request">
-            <Image src={giftRequest} alt="Gift & Request" width={240} height={40} className="hover:opacity-80 px-2" />
+            <Image src={giftRequest} alt="Gift & Request" width={240} height={40} className="hover:opacity-80 px-1" />
           </a>
           {/* <a href="/profile" className="hover:text-gray-300">PROFILE</a> */}
           {/* Right: UID Display */}
-          <a href="/transactions" 
+          {/* <a href="/transactions" 
             className="text-xs font-mono px-4 py-1 ml-4
             text-black drop-shadow text-center flex items-center hover:opacity-60"
             style={{
@@ -53,7 +54,10 @@ export default function Navbar() {
             <div>
                 Transactions
               </div>
-            </a>
+            </a> */}
+          <a href="/transactions">
+            <Image src={trans} alt="Trans" width={240} height={40} className="hover:opacity-80 px-1" />
+          </a>
           {name && (
             <a className="text-xs font-mono px-4 py-1 ml-4 hover:opacity-80 
                           text-black drop-shadow text-center flex items-center"
