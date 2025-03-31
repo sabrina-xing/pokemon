@@ -27,7 +27,11 @@ export default function AddCard() {
     setObtainedCard(null);  // Optionally reset the card
   }
 
-  const uid = session?.user?.uid;
+  console.log("session", session);
+  console.log("status", status);
+  console.log("uid", session?.user?.id);
+
+  const uid = session?.user?.id;
 
   const getRandomCard = async () => {
     if (!uid) {
