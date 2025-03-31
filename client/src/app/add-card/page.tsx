@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import PokemonCard from "../components/pokemoncard";
 
@@ -15,6 +16,7 @@ interface Pokemon {
 }
 
 export default function AddCard() {
+  const { data: session, status } = useSession();
   const [obtainedCard, setObtainedCard] = useState<Pokemon | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,14 +25,21 @@ export default function AddCard() {
   const closeModal = () => {
     setIsModalOpen(false);
     setObtainedCard(null);  // Optionally reset the card
-  };
+  }
+
+  const uid = session?.user?.uid;
 
   const getRandomCard = async () => {
+    if (!uid) {
+      setError("User not logged in.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
     // TO DO: implement backend for this route
-      const uid = 1; // for testing
+      // const uid = 1; // for testing
       const response = await fetch(`http://127.0.0.1:5000/get_random_card?uid=${uid}`);
       if (!response.ok) throw new Error("Failed to fetch a Pokémon card.");
 

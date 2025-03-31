@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Missing email or password");
           }
 
-          // ✅ Query MySQL `account` table for user
+          // Query MySQL `account` table for user
           const [users]: any[] = await pool.query("SELECT * FROM account WHERE email = ?", [credentials.email]);
 
           if (users.length === 0) {
@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
 
           const user = users[0];
 
-          // ✅ Validate password
+          // Validate password
           const isMatch = await bcrypt.compare(credentials.password, user.usr_password);
           if (!isMatch) {
             throw new Error("Invalid credentials");

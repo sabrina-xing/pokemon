@@ -33,6 +33,7 @@ schema = [
     "DROP TABLE IF EXISTS ownership",
     "DROP TABLE IF EXISTS pokemon_card;",
     "DROP TABLE IF EXISTS account;",
+    "DROP VIEW IF EXISTS card_owners;",
 
     """CREATE TABLE account (
         uid INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
@@ -125,6 +126,13 @@ create_index("ownership","index_own_card", "card_id")
 create_index("pokemon_card","index_card_id", "card_id")
 
 
+mycursor.execute("""
+            CREATE VIEW card_owners AS
+            SELECT o.uid, o.card_id, a.username
+            FROM ownership o
+            JOIN account a ON o.uid = a.uid;
+        """)
+
 def convert_date(date_str):
     return datetime.strptime(date_str, "%m/%d/%Y").strftime("%Y-%m-%d")
 
@@ -197,10 +205,4 @@ with open('../database/ownership.csv','r') as csvfile:
     db.commit()
 
 mycursor.close()
-
-
-
-    
-
-
 
