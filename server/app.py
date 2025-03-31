@@ -16,8 +16,8 @@ load_dotenv()
 app = Flask(__name__)
 
 # Enable CORS for all domains on all routes
-# CORS(app,  origins=["http://localhost:3000"])
-CORS(app)
+CORS(app,  origins=["http://localhost:3000"])
+# CORS(app)
 
 # Database connection   
 DB_CONFIG = {
@@ -383,16 +383,13 @@ def gift_card():
     cursor = conn.cursor()
 
     data = request.json
-    sender_username = data.get('sender_username')
+    sender_id = data.get('sender_uid')
     receiver_username = data.get('receiver_username')
     card_id = data.get('card_id')
 
     # Get userid from usernames
     cursor.execute("SELECT uid FROM account WHERE username = %s", (receiver_username,))
-    receiver_id = cursor.fetchone()[0] > 0
-
-    cursor.execute("SELECT uid FROM account WHERE username = %s", (sender_username,))
-    sender_id = cursor.fetchone()[0] > 0
+    receiver_id = cursor.fetchone()[0]
 
     # Error handling
     # check if sender and receiver exist in the account table
@@ -408,18 +405,16 @@ def gift_card():
         return jsonify({"error": "Sender or receiver does not exist"}), 400
 
     # prevent self-transfers
-    if sender_uid == receiver_uid:
+    if int(sender_id) == int(receiver_id):
         cursor.close()
         conn.close()
         return jsonify({"error": "Sender and receiver cannot be the same"}), 400
 
     # check if sender owns the card
     cursor.execute("""
-        SELECT receiver_id 
-        FROM transaction 
-        WHERE card_id = %s 
-        ORDER BY tdate DESC 
-        LIMIT 1
+        SELECT uid 
+        FROM ownership 
+        WHERE card_id = %s
     """, (card_id,))
 
     latest_owner = cursor.fetchone()
@@ -435,17 +430,19 @@ def gift_card():
             return jsonify({"error": "Card does not exist"}), 400
 
         # if card exists but never been traded, assume original ownership
-        original_owner = sender_uid
+        original_owner = sender_id
     else:
         original_owner = latest_owner[0]
+    
+    print(f"sender_id: {sender_id}, type: {type(sender_id)}")
+    print(f"original_owner: {original_owner}, type: {type(original_owner)}")
 
-    if original_owner != sender_uid:
+    if int(original_owner) != int(sender_id):
         cursor.close()
         conn.close()
         return jsonify({"error": "Sender does not own this card"}), 400
 
-
-    # Transfer the card
+    # Create transaction
     query = """INSERT INTO transaction 
     (card_id, sender_id, receiver_id, tdate, t_type) 
     VALUES (%s, %s, %s, NOW(), 'gift')"""
@@ -465,46 +462,41 @@ def request_card():
 
     data = request.json
     sender_username = data.get('sender_username')
-    receiver_username = data.get('receiver_username')
+    receiver_id = data.get('receiver_uid')
     card_id = data.get('card_id')
 
     # Get userid from usernames
-    cursor.execute("SELECT uid FROM account WHERE username = %s", (receiver_username,))
-    receiver_id = cursor.fetchone()[0] > 0
-
     cursor.execute("SELECT uid FROM account WHERE username = %s", (sender_username,))
-    sender_id = cursor.fetchone()[0] > 0
+    sender_id = cursor.fetchone()[0]
 
     # Error handling to ensure sender and reciever exists
     cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (sender_id,))
     sender_exists = cursor.fetchone()[0] > 0
 
-    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (requester_id,))
-    requester_exists = cursor.fetchone()[0] > 0
+    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (receiver_id,))
+    receiver_exists = cursor.fetchone()[0] > 0
 
-    if not sender_exists or not requester_exists:
+    if not sender_exists or not receiver_exists:
         cursor.close()
         conn.close()
-        return jsonify({"error": "Sender or requester does not exist"}), 400
+        return jsonify({"error": "Sender or receiver does not exist"}), 400
     
     # prevent self-transfers
-    if sender_id == requester_id:
+    if int(sender_id) == int(receiver_id):
         cursor.close()
         conn.close()
-        return jsonify({"error": "Sender and requester cannot be the same"}), 400
+        return jsonify({"error": "Sender and receiver cannot be the same"}), 400
     
     # Check if sender owns card
     cursor.execute("""
-        SELECT receiver_id 
-        FROM transaction 
-        WHERE card_id = %s 
-        ORDER BY tdate DESC 
-        LIMIT 1
-    """, (card_id,))
+        SELECT uid 
+        FROM ownership 
+        WHERE card_id = %s
+        """, (card_id,))
 
     latest_owner = cursor.fetchone()
 
-    if not latest_owner or latest_owner != sender_id:
+    if not latest_owner or int(latest_owner[0]) != int(sender_id):
         cursor.close()
         conn.close()
         return jsonify({"error": "Sender does not own card"})
@@ -513,7 +505,7 @@ def request_card():
     query = """INSERT INTO transaction 
         (card_id, sender_id, receiver_id, tdate, t_type)
         VALUES (%s, %s, %s, NOW(), 'request')"""
-    cursor.execut(query, (card_id, sender_id, requester_id))
+    cursor.execute(query, (card_id, sender_id, receiver_id))
     conn.commit()
 
     cursor.close()

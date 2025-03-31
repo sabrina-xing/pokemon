@@ -12,18 +12,20 @@ export default function GiftRequest() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
   const { data: session, status } = useSession();
 
   console.log("session", session);
   console.log("status", status);
-  console.log("uid", session?.user?.username);
+  console.log("name", session?.user?.id);
 
-  const username = session?.user?.username;
+
+  const uid = session?.user?.id;
 
   // Function to gift a card
   const handleGift = async () => {
 
-    if (!username) {
+    if (!uid) {
       setError("User not logged in.");
       return;
     }
@@ -32,14 +34,13 @@ export default function GiftRequest() {
     setMessage(null);
     setError(null);
     try {
-    // TO DO: test this route
       const response = await fetch("http://127.0.0.1:5000/gift_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           card_id: cardId, 
           receiver_username: receiverUsername,
-          sender_username: username
+          sender_uid: uid
            }),
       });
 
@@ -58,7 +59,7 @@ export default function GiftRequest() {
   // Function to request a card
   const handleRequest = async () => {
 
-    if (!username) {
+    if (!uid) {
       setError("User not logged in.");
       return;
     }
@@ -67,14 +68,13 @@ export default function GiftRequest() {
     setMessage(null);
     setError(null);
     try {
-        // TO DO: implement the backend route for this and test it
       const response = await fetch("http://127.0.0.1:5000/request_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           card_id: requestCardId, 
           sender_username: requestSenderUsername,
-          receiver_username: username, }),
+          receiver_uid: uid, }),
       });
 
       const data = await response.json();
