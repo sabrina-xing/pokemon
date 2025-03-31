@@ -278,7 +278,7 @@ export default function ProfilePage() {
               />
 
               {/* <h2 className="text-md font-semibold mb-4 text-gray-500">Your Pokémon Cards</h2> */}
-              {cards.length > 0 ? (
+              {filteredCards.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-gray-700">
                   {filteredCards.map((card) => (
                     <div key={card.card_id} className="bg-gray-100 p-2 text-center">
@@ -289,13 +289,25 @@ export default function ProfilePage() {
                     </div>
                   ))}
                 </div>
-              ) : <p className="text-gray-600">No cards owned.</p>}
+              ) : <p className="text-gray-600">No Pokémon match your search.</p>}
 
             </div>
           </div>
         </div>
       </div>
-      {error && <p className="mt-4 text-red-500">{error}</p>}
-    </div>
+
+      {error && <>
+        {/* Display messages */}
+        < div className="bg-white py-2 p-4 mb-8 items-center justify-center flex flex-col"
+          style={{
+            borderRadius: "10px",
+            //   backgroundImage: "linear-gradient(#d76660, #f99987)",
+          }}
+        >
+          <p className="mt-4 text-red-500">{error}</p>
+        </div>
+      </>
+      }
+    </div >
   );
 }

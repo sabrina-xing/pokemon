@@ -45,7 +45,7 @@ export default function Navbar() {
           </a>
           {name && (
             <a className="text-xs font-mono px-4 py-1 ml-4 hover:opacity-80 
-                          text-black drop-shadow text-center flex items-center"
+                          text-gray-800 drop-shadow text-center flex items-center"
               style={{
                 backgroundImage: `url(${nameBg.src})`,
                 backgroundSize: "100% 100%",
@@ -62,7 +62,7 @@ export default function Navbar() {
             className=""
           >
             {/* Logout */}
-            <Image src={logout} alt="Logout" width={110} height={40} className="hover:opacity-80 px-2 top-0 drop-shadow" />
+            <Image src={logout} alt="Logout" width={110} height={40} className="hover:opacity-80 px-2 top-0 drop-shadow cursor-pointer" />
           </button>
         </div>
       </div>
