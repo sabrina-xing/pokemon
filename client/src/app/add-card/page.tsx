@@ -27,12 +27,7 @@ export default function AddCard() {
     setObtainedCard(null);  // Optionally reset the card
   }
 
-  console.log("session", session);
-  console.log("status", status);
-  console.log("uid", session?.user?.id);
-
-  const uid = session?.user?.id;
-
+  const uid = session?.user.id
   const getRandomCard = async () => {
     if (!uid) {
       setError("User not logged in.");
@@ -67,7 +62,7 @@ export default function AddCard() {
       const response = await fetch("http://127.0.0.1:5000/add_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid: 1, card_id: cardId }), // change this to actual uid later
+        body: JSON.stringify({ uid: uid, card_id: cardId }), // change this to actual uid later
       });
       if (!response.ok) throw new Error("Failed to add a card.");
       setIsModalOpen(false);  
