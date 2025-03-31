@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/db.ts
+/src/app/lib/db.ts

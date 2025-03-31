@@ -1,8 +1,18 @@
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
   // TO DO: redo this so it looks like the red pokeball navbar with rounded edges
   //        ^ unless i change to the tcg theme and give up on the gamified theme lol
+  const { data: session, status } = useSession();
+  if (status === "loading") return null; // or a loading skeleton
+  if (status === "unauthenticated") return null; // or a login link
+
+  const uid = session?.user?.uid;
+  const username = session?.user?.name;
+  console.log("UID from session:", uid); // Debugging line
+  console.log("Session data:", session); // Debugging line
+  console.log("Session status:", status); // Debugging line
   return (
     <div className="text-white p-4 relative mx-4 z-99">
       <div
@@ -37,6 +47,12 @@ export default function Navbar() {
           </a>
 
           {/* <a href="/profile" className="hover:text-gray-300">PROFILE</a> */}
+          {/* Right: UID Display */}
+          {username && (
+            <div className="ml-6 text-sm font-mono bg-white text-blue-600 px-3 py-1 rounded-full border-2 border-blue-700 drop-shadow">
+              Hello, {username}
+            </div>
+          )}
         </div>
       </div>
 
