@@ -97,7 +97,7 @@ export default function Dashboard() {
       >
         {/* Left Sidebar: Search & Filters */}
         <div className="w-full"
-          // className="w-full py-6 px-2 text-black rounded-lg text-sm shadow-md 
+          // className="w-full py-6 px-2 text-gray-700 rounded-lg text-sm shadow-md 
           //       bg-[#F4E094] border-2 border-[#60606F]"
           style={{
             // padding: "50px",
@@ -212,17 +212,17 @@ export default function Dashboard() {
                   <button
                     onClick={prevPage}
                     disabled={currentPage === 1}
-                    className={`px-4 py-2 text-black rounded-full ${currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
+                    className={`px-4 py-2 text-gray-700 rounded-full ${currentPage === 1 ? "bg-gray-100 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
                   >
                     ← Previous
                   </button>
-                  <span className="text-black py-2">
+                  <span className="text-white py-2">
                     Page {currentPage} of {totalPages}
                   </span>
                   <button
                     onClick={nextPage}
                     disabled={currentPage === totalPages}
-                    className={`px-4 py-2 text-black rounded-full ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
+                    className={`px-4 py-2 text-gray-700 rounded-full ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-white hover:bg-gray-100"}`}
                   >
                     Next →
                   </button>

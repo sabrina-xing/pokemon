@@ -13,7 +13,7 @@ export default function ClientLayout({
   const hideNavbar = pathname === "/login" || pathname === "/signup";
   const { data: session, status } = useSession();
   if (status === "loading") {
-    return <div className="text-white text-center mt-10">Loading...</div>;
+    return <div className="text-white text-center pt-60 font-joystix">Loading...</div>;
   }
   
   return (
