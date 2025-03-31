@@ -16,7 +16,8 @@ load_dotenv()
 app = Flask(__name__)
 
 # Enable CORS for all domains on all routes
-CORS(app,  origins=["http://localhost:3000"])
+# CORS(app,  origins=["http://localhost:3000"])
+CORS(app)
 
 # Database connection   
 DB_CONFIG = {
@@ -31,13 +32,8 @@ def get_db_connection():
     return mysql.connector.connect(**DB_CONFIG)
 
 # Database connection
-def get_db():
-    return mysql.connector.connect(
-        host="localhost",  # Update with your DB host
-        user="root",  # Update with your DB user
-        password="password",  # Update with your DB password
-        database="mydb"  # Update with your DB name
-    )
+# def get_db():
+#     return mysql.connector.connect(**DB_CONFIG)
 
 # Function for searching/filtering pokemon cards
 @app.route('/search_pokemon', methods=['GET'])
