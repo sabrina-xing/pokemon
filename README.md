@@ -55,7 +55,7 @@ DB_PASSWORD=your_mysql_password  # Change this to your MySQL password
 DB_NAME=pokepals  # Change this to your database name
 DB_PORT=3306  # Default MySQL port
 ```
-- Create a file `/client/lib/db.ts` and add your MySQL password:
+- Create files `/client/lib/db.ts` and `/client/src/app/lib/db.ts` and add your MySQL password:
 ```
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
