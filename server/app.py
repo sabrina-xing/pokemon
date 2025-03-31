@@ -1,4 +1,4 @@
-from flask import Flask, make_response, request, jsonify, send_file
+from flask import Flask, session, request, jsonify, send_file
 from flask import Response
 from bson import Binary 
 import base64, binascii
@@ -16,6 +16,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Enable CORS for all domains on all routes
+# CORS(app,  origins=["http://localhost:3000"])
 CORS(app)
 
 # Database connection   
@@ -29,6 +30,10 @@ DB_CONFIG = {
 
 def get_db_connection():
     return mysql.connector.connect(**DB_CONFIG)
+
+# Database connection
+# def get_db():
+#     return mysql.connector.connect(**DB_CONFIG)
 
 # Function for searching/filtering pokemon cards
 @app.route('/search_pokemon', methods=['GET'])
@@ -64,9 +69,9 @@ def search_pokemon():
 
         # Start building the query dynamically
         query = """
-            SELECT pc.*, COALESCE(o.uid, NULL) AS owner_uid
+            SELECT pc.*, COALESCE(o.username, NULL) AS owner_username
             FROM pokemon_card pc
-            LEFT JOIN ownership o ON pc.card_id = o.card_id
+            LEFT JOIN card_owners o ON pc.card_id = o.card_id
             WHERE 1=1
         """
         params = []
@@ -94,8 +99,6 @@ def search_pokemon():
             query += " AND subtype=%s"
             params.append(f"{subtype}")
         # Execute query
-        print(query)
-        print(params)
         cursor.execute(query, params)
         results = cursor.fetchall()
 
@@ -113,8 +116,104 @@ def search_pokemon():
 
     except Exception as e:
         print(f"Unexpected error: {e}")
-        return jsonify({"error": "Something went wrong"}), 500
+        return jsonify({"error": "Something went wrong"}), 500 
+    
 
+@app.route('/get_random_card', methods=['GET'])
+def get_random_card():
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+    cursor = conn.cursor(dictionary=True)
+    try: 
+        uid = request.args.get('uid', type=int)
+        if (uid):
+            # check if uid exists
+            params=[]
+            query = "SELECT * FROM account WHERE uid=%s"
+            params.append(uid)
+            cursor.execute(query, params)
+            results = cursor.fetchall()
+            if len(results) == 0:
+                return jsonify({"error": "User does not exist"}), 400
+
+        # query random card
+        # used view
+        params = []
+        # find 3 random cards
+        query = "WITH owned AS (SELECT card_id FROM ownership WHERE uid = %s) "
+        query += "SELECT * FROM pokemon_card WHERE card_id NOT IN (SELECT card_id FROM owned) ORDER BY RAND() LIMIT 1;"
+        params.append(uid)
+        cursor.execute(query, params)
+        results = cursor.fetchone()
+        if (len(results) < 1):
+            return jsonify({"error": "No more Pokemon Cards"}), 500
+        cursor.close()
+        conn.close()
+        return jsonify(results)
+
+    except mysql.connector.Error as e:
+        print(f"Database query error: {e}")
+        return jsonify({"error": "Database query failed"}), 500
+    
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({"error": "Failed to add card"}), 500 
+
+
+# add a card to user's account
+@app.route('/add_card', methods=['POST'])
+def add_card():
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = conn.cursor(dictionary=True)
+    try: 
+        data = request.get_json()
+        uid = int(data.get("uid"))
+        card_id = data.get("card_id")
+        if (uid):
+            # check if uid exists
+            params=[]
+            query = "SELECT * FROM account WHERE uid=%s"
+            params.append(uid)
+            cursor.execute(query, params)
+            results = cursor.fetchall()
+            if len(results) == 0:
+                return jsonify({"error": "User does not exist"}), 400
+
+        if (card_id):
+            params=[]
+            query = "SELECT * FROM pokemon_card WHERE card_id=%s"
+            params.append(card_id)
+            cursor.execute(query, params)
+            results = cursor.fetchall()
+            if len(results) == 0:
+                return jsonify({"error": "User does not exist"}), 400
+
+        # used a transaction for insertion
+        query = "START TRANSACTION; INSERT INTO ownership (uid, card_id) VALUES (%s,%s); COMMIT;"
+        params = [int(uid), card_id]
+        cursor.execute(query, params)
+        conn.commit()
+        print("SUCCESFULLY ADDED")
+        return jsonify({"success": "pokemon added"}), 200
+
+
+    except mysql.connector.Error as e:
+        print(f"Database query error: {e}")
+        return jsonify({"error": "Database query failed"}), 500
+    
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({"error": "Failed to add card"}), 500 
+
+# Email validation function using regex
+def is_valid_email(email):
+    email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    return re.match(email_regex, email) is not None
+   
 @app.route('/view_account', methods=['GET'])
 def view_account():
     conn = get_db_connection()
@@ -228,7 +327,7 @@ def get_user_pokemon():
         query = """
             SELECT pc.*
             FROM ownership o
-            JOIN pokemon_card_sample pc ON o.card_id = pc.card_id
+            JOIN pokemon_card pc ON o.card_id = pc.card_id
             WHERE o.uid = %s
         """
         params = [uid]
