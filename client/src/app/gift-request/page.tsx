@@ -167,32 +167,6 @@ export default function GiftRequest() {
         <Image src={giftTitle} alt="Gift Title" width={900} height={40} className="" />
       </div>
 
-      {/* Request a Card */}
-      <div className="mt-8 p-6 w-96 bg-white shadow-lg rounded-lg border-2 border-black">
-        <h2 className="text-xl font-bold">Request a Pokémon Card</h2>
-        <input
-          type="text"
-          placeholder="Card ID"
-          value={requestCardId}
-          onChange={(e) => setRequestCardId(e.target.value)}
-          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
-        />
-        <input
-          type="text"
-          placeholder="Sender's Username"
-          value={requestSenderUsername}
-          onChange={(e) => setRequestSenderUsername(e.target.value)}
-          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
-        />
-        <button
-          onClick={handleRequest}
-          disabled={loading}
-          className="mt-4 px-6 py-3 w-full text-black border-2 bg-white rounded-lg hover:bg-gray-100 disabled:bg-gray-400"
-        >
-          {loading ? "Processing..." : "Request Card"}
-        </button>
-      </div>
-
       {requests.length > 0 && (
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">Pending Requests</h2>
