@@ -56,7 +56,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     { value: "['Lightning']", label: "Electric", image: "types/electric.png"},
     { value: "['Fire']", label: "Fire", image: "types/fire.png" },
     { value: "['Water']", label: "Water", image: "types/water.png" },
-    { value: "['Fighting']", label: "Fighting", image: "types/water.png"},
+    { value: "['Fighting']", label: "Fighting", image: "types/fighting.png"},
     { value: "['Psychic']", label: "Psychic", image: "types/psychic.png"},
     { value: "['Grass']", label: "Grass", image: "types/grass.png"},
     { value: "['Metal']", label: "Steel", image: "types/steel.png"},
@@ -143,21 +143,21 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
       ))}
       </select>
 
-     {/*} <Select options={typeOptions}
-      name="type"
-      isMulti
-      placeholder="Select Type(s)"
-      components={{
-        IndicatorSeparator: () => null
-      }}
-      formatOptionLabel={ option => (
-        <div className="flex items-center space-x-2">
-          <img src={option.image} alt={option.label} className="w-5 h-5" />
-          <span>{option.label}</span>
-        </div>
-      )}
-      styles={{
-        control: (base) => ({
+     {/* <Select options={typeOptions}
+        name="type"
+        isMulti
+        placeholder="Select Type(s)"
+        components={{
+          IndicatorSeparator: () => null
+        }}
+        formatOptionLabel={ option => (
+          <div className="flex items-center space-x-2">
+            <img src={option.image} alt={option.label} className="w-5 h-5" />
+            <span>{option.label}</span>
+          </div>
+       )}
+        styles={{
+          control: (base) => ({
           ...base,
           marginTop: "0.5rem",
           border: "1px solid black",

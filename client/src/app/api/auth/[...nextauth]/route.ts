@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { JWT } from "next-auth/jwt";
-import pool from "../../../../../lib/db"; // Ensure `db.ts` is set up correctly
+import pool from "../../../lib/db"; // Ensure `db.ts` is set up correctly
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -49,6 +49,8 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.username = user.name;
         token.email = user.email ?? "";
+        token.uid = user.uid;
+        token.username = user.username;
       }
       return token;
     },
@@ -57,6 +59,8 @@ export const authOptions: NextAuthOptions = {
         id: token.id as string,
         name: token.username as string,
         email: token.email as string, // Ensure it's a string
+        uid: token.uid as string,
+        user: token.username as string,
       };
       return session;
     },
@@ -66,3 +70,4 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
+
