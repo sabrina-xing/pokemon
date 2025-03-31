@@ -40,7 +40,7 @@ export default function Signup() {
             }
 
             console.log("User Created:", data);
-            router.push("/dashboard"); // Redirect to dashboard page after successful signup
+            router.push("/login"); // Redirect to login page after successful signup
         } catch (err) {
             setError("Something went wrong.");
         }
