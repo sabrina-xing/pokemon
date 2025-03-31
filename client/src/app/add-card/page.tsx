@@ -114,7 +114,7 @@ export default function AddCard() {
           <button
             onClick={getRandomCard}
             disabled={loading}
-            className="mt-12 px-6 py-3 text-lg bg-[#c14540] text-white rounded-lg hover:bg-[#f99987] disabled:bg-gray-400"
+            className="mt-12 px-6 py-3 text-lg bg-[#c14540] text-white rounded-full hover:bg-[#f99987] disabled:bg-gray-400"
           >
             {loading ? "Fetching..." : "Get Card"}
           </button>
@@ -145,14 +145,14 @@ export default function AddCard() {
             <div className="mt-4 text-center flex justify-center space-x-4">
               <button
                 onClick={() => addCard(obtainedCard?.card_id || "")}
-                className="px-6 py-3 text-xl bg-blue-600 text-white rounded-lg hover:bg-blue-900"
+                className="px-6 py-3 text-xl bg-[#c14540] text-white rounded-full hover:bg-[#e47e7b]"
               >
                 Add Card
               </button>
 
               <button
                 onClick={closeModal}
-                className="px-6 py-3 text-xl border-2 border-blue-600 bg-white text-blue-600 rounded-lg hover:bg-blue-200"
+                className="px-6 py-3 text-xl border-2 border-[#c14540] bg-white text-[#c14540] rounded-full hover:bg-[#f6e2e0]"
               >
                 Discard
               </button>

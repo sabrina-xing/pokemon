@@ -23,6 +23,7 @@ interface Pokemon {
   generation: string;
   set_name: string;
   image_url: string;
+  owner_username?: string;
 }
 
 const POKEMON_PER_PAGE = 12;
