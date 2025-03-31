@@ -24,7 +24,7 @@ export default function Navbar() {
       <div className="relative flex justify-between items-center max-w-6xl mx-auto px-6">
         <h1 className="text-2xl font-bold">PokéPals</h1>
 
-        <div className="flex w-2/3 justify-evenly font-bold">
+        <div className="flex w-4/5 justify-evenly font-bold">
           <a
             href="/dashboard"
             className="bg-gradient-to-b from-white to-[#F0A850] bg-clip-text text-transparent hover:opacity-80 fix-stroke drop-shadow-[0_0_2px_black]"
