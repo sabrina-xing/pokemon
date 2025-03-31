@@ -80,18 +80,14 @@ export default function Login() {
             }}></div>
 
           <div className="p-16 justify-center items-center flex flex-col"
-          style={{
-            backgroundImage: "linear-gradient(#d76660, #f99987)",
-            // font-family: "Joystix", monospace,
-            textAlign: "center",
-            width: "99%",
-            paddingTop: "8px",
-            paddingBottom: "8px",
-          }}>
-
-
-            {/* Display error message if login fails */}
-            {error && <p className="text-red-500 text-sm text-center mb-2">{error}</p>}
+            style={{
+              backgroundImage: "linear-gradient(#d76660, #f99987)",
+              // font-family: "Joystix", monospace,
+              textAlign: "center",
+              width: "99%",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+            }}>
 
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-4 pt-8">
@@ -112,6 +108,16 @@ export default function Login() {
                 required
                 className="w-full px-4 py-2 focus:ring-2 focus:ring-blue-400 bg-white text-black"
               />
+
+
+              {/* Display error message if login fails */}
+              {error && 
+                <p className="text-white 
+                justify-center flex text-sm text-center">
+                  {/* {error} */}
+                  Login Failed
+                </p>}
+
 
               <button
                 type="submit"

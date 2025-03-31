@@ -96,7 +96,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="pt-24 flex flex-col items-center justify-center">
+    <div className="pt-12 flex flex-col items-center justify-center">
 
       {/* Side-by-side container */}
       <div className="flex flex-col md:flex-row gap-8 px-8 justify-center items-start w-full max-w-6xl">
@@ -133,16 +133,17 @@ export default function ProfilePage() {
               marginTop: "3px",
             }}></div>
           <div className="p-16 flex flex-col">
-            {pfp ? (
+            <div className="flex justify-center">
               <img
-                src={pfp}
+                src={
+                  pfp?.trim()
+                    ? pfp
+                    : "https://t3.ftcdn.net/jpg/03/53/11/00/360_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg"
+                }
                 alt="Profile Picture"
                 className="mb-8 w-32 h-32 rounded-full object-cover border-2 border-gray-300 shadow-md"
-              />) :
-              (
-                <></>
-              )
-            }
+              />
+            </div>
             <p className="text-gray-600"><strong className="text-gray-700">Name:</strong> {name}</p>
             <p className="text-gray-600"><strong className="text-gray-700">Email:</strong> {email}</p>
             {editMode ? (
@@ -170,12 +171,12 @@ export default function ProfilePage() {
               <>
 
                 <p className="text-gray-600"><strong className="text-gray-700">Bio: </strong>{bio}</p>
-                {pfp ? (<></>) :
+                {/* {pfp ? (<></>) :
                   (
                     <p className="text-gray-600">
                       <strong className="text-gray-700">Profile Picture:</strong> {pfp || "N/A"} </p>
                   )
-                }
+                } */}
                 <button
                   onClick={() => setEditMode(true)}
                   className="mt-8 px-4 py-2 bg-[#d76660] text-white rounded-full hover:opacity-80"
@@ -298,7 +299,7 @@ export default function ProfilePage() {
 
       {error && <>
         {/* Display messages */}
-        < div className="bg-white py-2 p-4 mb-8 items-center justify-center flex flex-col"
+        <div className="bg-white py-2 p-4 mb-8 items-center justify-center flex flex-col"
           style={{
             borderRadius: "10px",
             //   backgroundImage: "linear-gradient(#d76660, #f99987)",
