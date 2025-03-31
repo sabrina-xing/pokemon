@@ -25,21 +25,21 @@ export default function AddCard() {
   const closeModal = () => {
     setIsModalOpen(false);
     setObtainedCard(null);  // Optionally reset the card
-  };
-  const [isModalOpen, setIsModalOpen] = useState(false);  
+  }
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setObtainedCard(null);  // Optionally reset the card
-  };
+  const uid = session?.user?.uid;
 
   const getRandomCard = async () => {
+    if (!uid) {
+      setError("User not logged in.");
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     try {
     // TO DO: implement backend for this route
       // const uid = 1; // for testing
-      const uid = session?.user?.uid;
       const response = await fetch(`http://127.0.0.1:5000/get_random_card?uid=${uid}`);
       if (!response.ok) throw new Error("Failed to fetch a Pokémon card.");
 
