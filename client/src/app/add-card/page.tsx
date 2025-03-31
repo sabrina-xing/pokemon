@@ -121,7 +121,12 @@ export default function AddCard() {
 
         </div>
       </div>
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+
+      {error &&
+        <div className="bg-white">
+          <p className="text-red-500 mt-4 rounded">{error}</p>
+        </div>
+      }
 
       {/* Display the obtained Pokémon card */}
       {isModalOpen && obtainedCard && (

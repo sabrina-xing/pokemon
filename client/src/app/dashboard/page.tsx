@@ -194,7 +194,7 @@ export default function Dashboard() {
               {loading ? (
                 <p className="text-center text-white">Loading Pokémon...</p>
               ) : error ? (
-                <p className="text-center text-red-500">{error}</p>
+                <p className="text-center p-2 bg-white rounded text-red-500">{error}</p>
               ) : currentPokemon.length > 0 ? (
                 currentPokemon.map((pokemon) => (
                   <PokemonCard key={pokemon.card_id} pokemon={pokemon} />

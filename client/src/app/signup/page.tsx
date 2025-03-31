@@ -39,7 +39,7 @@ export default function Signup() {
         return;
       }
 
-      router.push("/dashboard");
+      router.push("/login");  // must reroute to login page after signup
     } catch (err) {
       setError("Something went wrong.");
     }
@@ -79,7 +79,11 @@ export default function Signup() {
               paddingBottom: "8px",
             }}>
 
-            {error && <p className="text-red-500 text-sm text-center mb-2">{error}</p>}
+            {error &&
+              <p className="text-red-500 text-sm text-center bg-white rounded p-2 mb-2">
+                {error}
+              </p>
+            }
 
             <form onSubmit={handleSubmit} className="space-y-4 pt-8">
               <input
