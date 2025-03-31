@@ -117,4 +117,4 @@ _(localhost:3000 by default)_
 <img src="https://github.com/user-attachments/assets/08af755b-c528-49ec-9dc6-c0fe022a4d98" width="400px" style="pointer-events: none;"/>
 <img src="https://github.com/user-attachments/assets/8f15fc83-1772-4cc3-adcc-03d883b4d1c2" width="400px" style="pointer-events: none;"/>
 <img src="https://github.com/user-attachments/assets/54a07991-e1e3-4246-bd13-5ee90a491a74" width="400px" style="pointer-events: none;"/>
-<img src="https://github.com/user-attachments/assets/5e38d99e-eed8-4fed-a8dc-595fb79c337f" width="400px" style="pointer-events: none;"/>
+<img src="https://github.com/user-attachments/assets/53febae4-2855-46d8-985b-a198a62da41f" width="400px" style="pointer-events: none;"/>
