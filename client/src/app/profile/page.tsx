@@ -31,7 +31,7 @@ interface Card {
 //   ); 
 
 export default function ProfilePage() {
-  const {data: session, update} = useSession()
+  const { data: session, update } = useSession()
   const uid = session?.user?.id;
   const name = session?.user?.name;
   const email = session?.user?.email;
@@ -44,6 +44,8 @@ export default function ProfilePage() {
   const [pfp, setPfp] = useState(session?.user?.pfp || "");
   const [editMode, setEditMode] = useState(false);
   console.log(bio, pfp);
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (!uid) return;
@@ -61,6 +63,10 @@ export default function ProfilePage() {
 
     fetchData();
   }, [uid]);
+
+  const filteredCards = cards.filter((card) =>
+    card.pname.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleUpdate = async () => {
     try {
@@ -181,55 +187,111 @@ export default function ProfilePage() {
           </div>
         </div>
 
-
-        <div // box
-          className="flex flex-col items-center transition-all duration-500 bg-white z-0 mb-8"
-          style={{
-            top: "max(200px, 25vh)",
-          }}
-        >
-          <div className=""  // line
+        <div>
+          {/* Searchbar */}
+          {/* <div className="w-full pb-4"
+            // className="w-full py-6 px-2 text-gray-700 rounded-lg text-sm shadow-md 
+            //       bg-[#F4E094] border-2 border-[#60606F]"
             style={{
-              width: "99%",
-              height: "3px",
-              backgroundColor: "#c14540",
-              marginTop: "3px",
-            }}></div>
-          <div className="text-white font-joystix text-md"
+              // padding: "50px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              // alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-block",
+                // width: "35vw",
+                backgroundColor: "white",
+                borderTopRightRadius: "10px",
+                borderTopLeftRadius: "10px",
+                padding: "20px",
+                paddingLeft: "30px",
+                paddingBottom: "10px",
+              }}
+            >
+              <h1 className="text-lg font-bold ml-2 text-[#b13730]">Pokémon Search</h1>
+            </div>
+            <div className="p-16 justify-center items-center flex flex-col"
+              style={{
+                display: "flex",
+                // width: "35vw",
+                backgroundImage: "linear-gradient(#d76660, #f99987)",
+                // borderBottomRightRadius: "10px",
+                // borderBottomLeftRadius: "10px",
+                padding: "20px",
+                paddingLeft: "30px",
+                // minHeight: "300px",
+                boxShadow: "inset 0 0 0 6px white",
+              }}>
+              <input
+                type="text"
+                placeholder="Search by Pokémon name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full p-2 rounded-full bg-white text-gray-700"
+              />
+            </div>
+          </div> */}
+
+          <div // box
+            className="flex flex-col items-center transition-all duration-500 bg-white z-0 mb-8"
             style={{
-              backgroundImage: "linear-gradient(#d76660, #f99987)",
-              // font-family: "Joystix", monospace,
-              textAlign: "center",
-              width: "99%",
-              paddingTop: "8px",
-              paddingBottom: "8px",
-            }}>
-            YOUR_CARDS.TXT
-          </div>
-          <div className=""  // line
-            style={{
-              width: "99%",
-              height: "3px",
-              backgroundColor: "#c14540",
-              marginTop: "3px",
-            }}></div>
-          <div className="p-8 justify-center items-center flex flex-col">
+              top: "max(200px, 25vh)",
+            }}
+          >
+            <div className=""  // line
+              style={{
+                width: "99%",
+                height: "3px",
+                backgroundColor: "#c14540",
+                marginTop: "3px",
+              }}></div>
+            <div className="text-white font-joystix text-md"
+              style={{
+                backgroundImage: "linear-gradient(#d76660, #f99987)",
+                // font-family: "Joystix", monospace,
+                textAlign: "center",
+                width: "99%",
+                paddingTop: "8px",
+                paddingBottom: "8px",
+              }}>
+              YOUR_CARDS.TXT
+            </div>
+            <div className=""  // line
+              style={{
+                width: "99%",
+                height: "3px",
+                backgroundColor: "#c14540",
+                marginTop: "3px",
+              }}></div>
+            <div className="p-8 justify-center items-center flex flex-col">
 
+              <input
+                type="text"
+                placeholder="Search by Pokémon name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full p-2 border-2 mb-6 border-gray-400 rounded-full bg-white text-gray-700"
+              />
 
-            {/* <h2 className="text-md font-semibold mb-4 text-gray-500">Your Pokémon Cards</h2> */}
-            {cards.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-gray-700">
-                {cards.map((card) => (
-                  <div key={card.card_id} className="bg-gray-100 p-2 text-center">
-                    <img src={card.image_url} alt={card.pname} className="w-full h-42 object-contain mb-2" />
-                    <p className="font-semibold">{card.pname}</p>
-                    <p className="text-sm text-gray-600">{card.set_name}</p>
-                    <p className="text-sm text-gray-500 italic">{card.rarity}</p>
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-gray-600">No cards owned.</p>}
+              {/* <h2 className="text-md font-semibold mb-4 text-gray-500">Your Pokémon Cards</h2> */}
+              {cards.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-gray-700">
+                  {filteredCards.map((card) => (
+                    <div key={card.card_id} className="bg-gray-100 p-2 text-center">
+                      <img src={card.image_url} alt={card.pname} className="w-full h-42 object-contain mb-2" />
+                      <p className="font-semibold">{card.pname}</p>
+                      <p className="text-sm text-gray-600">{card.set_name}</p>
+                      <p className="text-sm text-gray-500 italic">{card.rarity}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : <p className="text-gray-600">No cards owned.</p>}
 
+            </div>
           </div>
         </div>
       </div>
