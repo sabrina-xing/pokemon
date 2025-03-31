@@ -194,7 +194,6 @@ def add_card():
 
         # used a transaction for insertion
         query = "START TRANSACTION; INSERT INTO ownership (uid, card_id) VALUES (%s,%s); COMMIT;"
-        print(uid,"000000")
         params = [int(uid), card_id]
         cursor.execute(query, params)
         conn.commit()
