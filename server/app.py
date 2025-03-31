@@ -66,7 +66,6 @@ def search_pokemon():
            
         if pname and not pname.replace(" ", "").isalpha():
             return jsonify({"error": "Invalid pname format"}), 400
-
         # Start building the query dynamically
         query = """
             SELECT pc.*, COALESCE(o.username, NULL) AS owner_username
@@ -77,7 +76,7 @@ def search_pokemon():
         params = []
 
         if card_id:
-            query += " AND card_id = %s"
+            query += " AND pc.card_id = %s"
             params.append(card_id)
         if pname:
             query += " AND pname LIKE %s"
@@ -99,6 +98,7 @@ def search_pokemon():
             query += " AND subtype=%s"
             params.append(f"{subtype}")
         # Execute query
+        print(query)
         cursor.execute(query, params)
         results = cursor.fetchall()
 
@@ -127,6 +127,7 @@ def get_random_card():
     cursor = conn.cursor(dictionary=True)
     try: 
         uid = request.args.get('uid', type=int)
+        print(uid)
         if (uid):
             # check if uid exists
             params=[]
@@ -141,10 +142,9 @@ def get_random_card():
         # used view
         params = []
         # find 3 random cards
-        query = "WITH owned AS (SELECT card_id FROM ownership WHERE uid = %s) "
+        query = "WITH owned AS (SELECT card_id FROM ownership) "
         query += "SELECT * FROM pokemon_card WHERE card_id NOT IN (SELECT card_id FROM owned) ORDER BY RAND() LIMIT 1;"
-        params.append(uid)
-        cursor.execute(query, params)
+        cursor.execute(query)
         results = cursor.fetchone()
         if (len(results) < 1):
             return jsonify({"error": "No more Pokemon Cards"}), 500
@@ -298,7 +298,7 @@ def get_user_pokemon():
         return jsonify({"error": "Database connection failed"}), 500
     
     cursor = conn.cursor(dictionary=True)
-
+    
     try:
         # Extract query parameters
         uid = request.args.get("uid", type=int)
@@ -310,6 +310,7 @@ def get_user_pokemon():
         pokemon_type = request.args.getlist('pokemon_type')
         subtype = request.args.get('subtype', default=None, type=str)
         # Validate inputs (Optional)
+
         if card_id:
             hyphen_count = card_id.count("-")
             if hyphen_count != 1:
