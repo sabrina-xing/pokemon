@@ -83,7 +83,10 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
 
   return (
 
-    <div className="w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 rounded-lg bg-[#F8F8CD] border-2 border-gray-300 shadow-md">
+    <div className="w-full grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 rounded-full 
+     text-black/80
+    ">
+      {/* bg-[#F8F8CD] -2 -gray-300 shadow-md */}
       {/* Search Input */}
       <input
         type="text"
@@ -91,7 +94,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         placeholder="Search Pokémon"
         value={searchParams.pname}
         onChange={handleChange}
-        className="w-full mt-2 px-4 py-2 border rounded-lg bg-white"
+        className="w-full mt-2 px-4 py-2 rounded-full bg-white"
       />
 
       {/* Card ID Search */}
@@ -101,10 +104,10 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         placeholder="Search Card ID"
         value={searchParams.card_id}
         onChange={handleChange}
-        className="w-full mt-2 px-4 py-2 border rounded-lg bg-white"
+        className="w-full mt-2 px-4 py-2 rounded-full bg-white"
       />
       {/* Filters */}
-      <select name="set_name" className="w-full mt-2 px-4 py-2 border rounded-lg bg-white" onChange={handleChange}>
+      <select name="set_name" className="w-full mt-2 px-4 py-2  rounded-full bg-white" onChange={handleChange}>
         {...setOptions.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -112,7 +115,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
       ))}
       </select>
 
-      <select name="generation" className="w-full mt-2 px-4 py-2 border rounded-lg bg-white" onChange={handleChange}>
+      <select name="generation" className="w-full mt-2 px-4 py-2  rounded-full bg-white" onChange={handleChange}>
         <option value="">All Generations</option>
         <option value="Base">Base</option>
         <option value="Neo">Neo</option>
@@ -124,7 +127,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         <option value="Other">Other</option>
       </select>
 
-      <select name="rarity" className="w-full mt-2 px-4 py-2 border rounded-lg bg-white" onChange={handleChange}>
+      <select name="rarity" className="w-full mt-2 px-4 py-2  rounded-full bg-white" onChange={handleChange}>
         <option value="">All Rarities</option>
         <option value="Common">Common</option>
         <option value="Uncommon">Uncommon</option>
@@ -135,7 +138,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         <option value="Classic Collection">Classic Collection</option>
       </select>
 
-      <select name="pokemon_type" className="w-full mt-2 px-4 py-2 border rounded-lg bg-white" onChange={handleChange}>
+      <select name="pokemon_type" className="w-full mt-2 px-4 py-2  rounded-full bg-white" onChange={handleChange}>
         {...typeOptions.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -160,15 +163,15 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           control: (base) => ({
           ...base,
           marginTop: "0.5rem",
-          border: "1px solid black",
-          borderRadius: "0.5rem",
+          : "1px solid black",
+          Radius: "0.5rem",
           paddingInline: "0.5rem",
         }),
       }}
       ></Select>*/}
 
 
-      <select name="subtype" className="w-full mt-2 px-4 py-2 border rounded-lg bg-white" onChange={handleChange}>
+      <select name="subtype" className="w-full mt-2 px-4 py-2  rounded-full bg-white" onChange={handleChange}>
         <option value="">All Evolutions</option>
         <option value="['Basic']">Basic</option>
         <option value="['Stage 1']">Stage 1</option>

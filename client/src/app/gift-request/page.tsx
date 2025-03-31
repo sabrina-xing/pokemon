@@ -2,6 +2,8 @@
 
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import giftTitle from '../../../public/buttons/gift-title.png';
+import Image from "next/image";
 
 interface Transaction {
   tid: number;
@@ -12,6 +14,8 @@ interface Transaction {
   t_type: "gift" | "request";
   status?: string;
 }
+
+
 
 export default function GiftRequest() {
   const [cardId, setCardId] = useState("");
@@ -158,83 +162,143 @@ export default function GiftRequest() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-black">
-      {/* <Navbar /> */}
-      <h1 className="text-4xl font-bold mt-6 font-joystix">Gift & Request Pokémon Cards</h1>
-
-      {/* Gift a Card */}
-      <div className="mt-8 p-6 w-96 bg-white shadow-lg rounded-lg border-2 border-black">
-        <h2 className="text-xl font-bold">Gift a Pokémon Card</h2>
-        <input
-          type="text"
-          placeholder="Card ID"
-          value={cardId}
-          onChange={(e) => setCardId(e.target.value)}
-          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
-        />
-        <input
-          type="text"
-          placeholder="Receiver's Username"
-          value={receiverUsername}
-          onChange={(e) => setReceiverUsername(e.target.value)}
-          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
-        />
-        <button
-          onClick={handleGift}
-          disabled={loading}
-          className="mt-4 px-6 py-3 w-full text-black border-2 rounded-lg hover:bg-gray-100 disabled:bg-gray-400"
-        >
-          {loading ? "Processing..." : "Gift Card"}
-        </button>
+      <div className="">
+        {/* <h1 className="text-4xl font-bold mt-6 font-joystix">
+          Gift & Request Pokémon Cards
+        </h1> */}
+        <Image src={giftTitle} alt="Gift Title" width={900} height={40} className="" />
       </div>
 
-      {/* Request a Card */}
-      <div className="mt-8 p-6 w-96 bg-white shadow-lg rounded-lg border-2 border-black">
-        <h2 className="text-xl font-bold">Request a Pokémon Card</h2>
-        <input
-          type="text"
-          placeholder="Card ID"
-          value={requestCardId}
-          onChange={(e) => setRequestCardId(e.target.value)}
-          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
-        />
-        <input
-          type="text"
-          placeholder="Sender's Username"
-          value={requestSenderUsername}
-          onChange={(e) => setRequestSenderUsername(e.target.value)}
-          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
-        />
-        <button
-          onClick={handleRequest}
-          disabled={loading}
-          className="mt-4 px-6 py-3 w-full text-black border-2 bg-white rounded-lg hover:bg-gray-100 disabled:bg-gray-400"
-        >
-          {loading ? "Processing..." : "Request Card"}
-        </button>
-      </div>
+      {/* Side-by-side container */}
+      <div className="flex flex-col md:flex-row gap-8 px-8 justify-center items-start w-full max-w-6xl">
 
-      {requests.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Pending Requests</h2>
-          {requests.map((tx) => (
-            <div key={tx.tid} className="border p-4 rounded bg-white mb-2">
-              <p>Card ID: {tx.card_id}</p>
-              <div className="mt-2 flex gap-2">
-                <button onClick={() => handleAccept(tx.tid)} className="bg-green-500 text-white px-3 py-1 rounded">
-                  Accept
-                </button>
-                <button onClick={() => handleReject(tx.tid)} className="bg-red-500 text-white px-3 py-1 rounded">
-                  Reject
-                </button>
-              </div>
-            </div>
-          ))}
+        {/* Gift a Card */}
+        <div
+          style={{
+            padding: "50px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          {/* 
+          marginTop: "20px", */}
+          <div
+            style={{
+              display: "inline-block",
+              width: "35vw",
+              backgroundColor: "white",
+              borderTopRightRadius: "10px",
+              borderTopLeftRadius: "10px",
+              padding: "20px",
+              paddingLeft: "30px",
+            }}
+          >
+            <h2 className="text-xl font-bold text-[#bd524d]">Gift a Pokémon Card</h2>
+          </div>
+          <div className="p-16 justify-center items-center flex flex-col"
+            style={{
+              display: "flex",
+              width: "35vw",
+              backgroundImage: "linear-gradient(#d76660, #f99987)",
+              borderBottomRightRadius: "10px",
+              borderBottomLeftRadius: "10px",
+              padding: "20px",
+              paddingLeft: "30px",
+              minHeight: "300px",
+              boxShadow: "inset 0 0 0 6px white",
+            }}>
+            <input
+              type="text"
+              placeholder="Card ID"
+              value={cardId}
+              onChange={(e) => setCardId(e.target.value)}
+              className="w-full mt-2 px-4 py-2 bg-gray-50"
+            />
+            <input
+              type="text"
+              placeholder="Receiver's Username"
+              value={receiverUsername}
+              onChange={(e) => setReceiverUsername(e.target.value)}
+              className="w-full mt-2 px-4 py-2 bg-gray-50"
+            />
+            <button
+              onClick={handleGift}
+              disabled={loading}
+              className="mt-4 px-6 py-3 rounded-full text-[#bd524d] bg-white hover:bg-[#f7e0df] disabled:bg-gray-400"
+            >
+              {loading ? "Processing..." : "Gift Card"}
+            </button>
+          </div>
+
         </div>
-      )}
 
+        {/* Request a Card */}
+        <div className="pt-0 p-[50px]"
+          style={{
+            padding: "50px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          {/* 
+          paddingTop: "0px",
+          padding: "50px",
+          marginTop: "20px", */}
+          <div
+            style={{
+              display: "inline-block",
+              width: "35vw",
+              backgroundColor: "white",
+              borderTopRightRadius: "10px",
+              borderTopLeftRadius: "10px",
+              padding: "20px",
+              paddingLeft: "30px",
+            }}
+          >
+            <h2 className="text-xl font-bold text-[#bd524d]">Request a Pokémon Card</h2>
+          </div>
+          <div className="p-16 justify-center items-center flex flex-col"
+            style={{
+              display: "flex",
+              width: "35vw",
+              backgroundImage: "linear-gradient(#d76660, #f99987)",
+              borderBottomRightRadius: "10px",
+              borderBottomLeftRadius: "10px",
+              padding: "20px",
+              paddingLeft: "30px",
+              minHeight: "300px",
+              boxShadow: "inset 0 0 0 6px white",
+            }}>
+            <input
+              type="text"
+              placeholder="Card ID"
+              value={requestCardId}
+              onChange={(e) => setRequestCardId(e.target.value)}
+              className="w-full mt-2 px-4 py-2 bg-gray-50"
+            />
+            <input
+              type="text"
+              placeholder="Sender's Username"
+              value={requestSenderUsername}
+              onChange={(e) => setRequestSenderUsername(e.target.value)}
+              className="w-full mt-2 px-4 py-2 bg-gray-50"
+            />
+            <button
+              onClick={handleRequest}
+              disabled={loading}
+              className="mt-4 px-6 py-3 text-[#bd524d] bg-white rounded-full hover:bg-[#f7e0df] disabled:bg-gray-400"
+            >
+              {loading ? "Processing..." : "Request Card"}
+            </button>
+          </div>
+        </div>
+      </div>
       {/* Display messages */}
       {message && <p className="text-green-600 mt-4">{message}</p>}
       {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
+
   );
 }
