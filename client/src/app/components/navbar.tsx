@@ -32,31 +32,16 @@ export default function Navbar() {
 
         <div className="flex justify-evenly font-bold">
           <a href="/dashboard">
-            <Image src={dashboard} alt="Dashboard" width={240} height={40} className="hover:opacity-80 px-1" />
+            <Image src={dashboard} alt="Dashboard" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           <a href="/add-card">
-            <Image src={addCard} alt="Add Card" width={240} height={40} className="hover:opacity-80 px-1" />
+            <Image src={addCard} alt="Add Card" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           <a href="/gift-request">
-            <Image src={giftRequest} alt="Gift & Request" width={240} height={40} className="hover:opacity-80 px-1" />
+            <Image src={giftRequest} alt="Gift & Request" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
-          {/* <a href="/profile" className="hover:text-gray-300">PROFILE</a> */}
-          {/* Right: UID Display */}
-          {/* <a href="/transactions" 
-            className="text-xs font-mono px-4 py-1 ml-4
-            text-black drop-shadow text-center flex items-center hover:opacity-60"
-            style={{
-              backgroundImage: `url(${nameBg.src})`,
-              backgroundSize: "100% 100%",
-              width:"240", height:"40",
-            }}
-          >
-            <div>
-                Transactions
-              </div>
-            </a> */}
           <a href="/transactions">
-            <Image src={trans} alt="Trans" width={240} height={40} className="hover:opacity-80 px-1" />
+            <Image src={trans} alt="Trans" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           {name && (
             <a className="text-xs font-mono px-4 py-1 ml-4 hover:opacity-80 
@@ -77,7 +62,7 @@ export default function Navbar() {
             className=""
           >
             {/* Logout */}
-            <Image src={logout} alt="Logout" width={110} height={40} className="hover:opacity-80 px-2 top-0" />
+            <Image src={logout} alt="Logout" width={110} height={40} className="hover:opacity-80 px-2 top-0 drop-shadow" />
           </button>
         </div>
       </div>
