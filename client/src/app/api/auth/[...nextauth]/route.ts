@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
         token.id = user.id;
-        token.username = user.name;
+        token.name = user.name;
         token.email = user.email ?? "";
         token.uid = user.uid;
         token.username = user.username;
@@ -57,10 +57,10 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }: { session: any; token: JWT }) {
       session.user = {
         id: token.id as string,
-        name: token.username as string,
+        name: token.name as string,
         email: token.email as string, // Ensure it's a string
         uid: token.uid as string,
-        user: token.username as string,
+        username: token.username as string,
       };
       return session;
     },
