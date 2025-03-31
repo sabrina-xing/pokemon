@@ -564,9 +564,14 @@ def reject_transaction():
     uid = data.get('uid')
 
     # Check if the user is invovled in the transaction
-    cursor.execute("SELECT sender_id, receiver_id, t_type FROM transaction WHERE tid = %s", (tid,))
+    cursor.execute("SELECT sender_id, receiver_id, t_type, status FROM transaction WHERE tid = %s", (tid,))
     row = cursor.fetchone()
-    sender_id, receiver_id, t_type = row
+    sender_id, receiver_id, t_type, status = row
+    
+    if status != 'in progress':
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Transaction has already been complete"}), 400
 
     if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
         cursor.close()
@@ -596,15 +601,20 @@ def accept_transaction():
     uid = data.get('uid')
 
     # Check if the user is invovled in the transaction
-    cursor.execute("SELECT sender_id, receiver_id, card_id, t_type FROM transaction WHERE tid = %s", (tid,))
+    cursor.execute("SELECT sender_id, receiver_id, card_id, t_type, status FROM transaction WHERE tid = %s", (tid,))
     row = cursor.fetchone()
-    sender_id, receiver_id, card_id, t_type = row
+    sender_id, receiver_id, card_id, t_type, status = row
 
     if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
         cursor.close()
         conn.close()
         return jsonify({"error": "Sender and requester is not involved in transaction"}), 400
     
+    if status != 'in progress':
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Transaction has already been complete"}), 400
+
     query = """
             START TRANSACTION;
 
