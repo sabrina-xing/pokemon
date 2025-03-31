@@ -393,7 +393,7 @@ def get_user_transaction():
         query = """
             SELECT *
             FROM transaction
-            WHERE sender_id = %s OR receiver_id = %s
+            WHERE (sender_id = %s OR receiver_id = %s);
             """
 
         cursor.execute(query, (uid, uid,))

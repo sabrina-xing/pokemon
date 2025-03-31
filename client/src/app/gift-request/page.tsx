@@ -35,29 +35,6 @@ export default function GiftRequest() {
   const uid = session?.user?.id;
   console.log("uid", uid); // Debugging line
 
-  // Fetch user requests
-  const fetchRequests = async () => {
-    if (!uid) return;
-    try {
-      const res = await fetch(`http://127.0.0.1:5000/user_transaction?uid=${uid}`);
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        const filtered = data.filter((tx: Transaction) => tx.t_type === "request" || tx.t_type === "gift");
-        setRequests(filtered);
-      } else if (data.message === "No transactions found") {
-        setRequests([]); // just no requests, not an error
-      } else {
-        setError(data.error || "Could not load requests.");
-      }
-    } catch (err) {
-      setError("Failed to fetch transactions.");
-    }
-  };
-
-  useEffect(() => {
-    fetchRequests();
-  }, [uid]);
-
   // Function to gift a card
   const handleGift = async () => {
 
@@ -123,40 +100,7 @@ export default function GiftRequest() {
     } finally {
       setLoading(false);
     }
-  };
-
-  
-  const handleAccept = async (tid: number) => {
-    try {
-      const res = await fetch("http://127.0.0.1:5000/accept_transaction", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tid, uid }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setMessage("Transaction accepted.");
-      setRequests((prev) => prev.filter((tx) => tx.tid !== tid));
-    } catch (err) {
-      setError("Error accepting transaction.");
-    }
-  };
-
-  const handleReject = async (tid: number) => {
-    try {
-      const res = await fetch("http://127.0.0.1:5000/reject_transaction", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tid, uid }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      setMessage("Transaction rejected.");
-      setRequests((prev) => prev.filter((tx) => tx.tid !== tid));
-    } catch (err) {
-      setError("Error rejecting transaction.");
-    }
-  };
+  }; 
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-black">
@@ -166,25 +110,6 @@ export default function GiftRequest() {
         </h1> */}
         <Image src={giftTitle} alt="Gift Title" width={900} height={40} className="" />
       </div>
-
-      {requests.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Pending Requests</h2>
-          {requests.map((tx) => (
-            <div key={tx.tid} className="border p-4 rounded bg-white mb-2">
-              <p>Card ID: {tx.card_id}</p>
-              <div className="mt-2 flex gap-2">
-                <button onClick={() => handleAccept(tx.tid)} className="bg-green-500 text-white px-3 py-1 rounded">
-                  Accept
-                </button>
-                <button onClick={() => handleReject(tx.tid)} className="bg-red-500 text-white px-3 py-1 rounded">
-                  Reject
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Side-by-side container */}
       <div className="flex flex-col md:flex-row gap-8 px-8 justify-center items-start w-full max-w-6xl">
