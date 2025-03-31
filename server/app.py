@@ -611,6 +611,11 @@ def accept_transaction():
     tid = data.get('tid')
     uid = data.get('uid')
 
+    print(f"tid: {tid}")
+    print(f"uid: {uid}")
+
+
+
     # Check if the user is invovled in the transaction
     cursor.execute("SELECT sender_id, receiver_id, card_id, t_type, status FROM transaction WHERE tid = %s", (tid,))
     row = cursor.fetchone()
@@ -624,22 +629,23 @@ def accept_transaction():
     if status != 'in progress':
         cursor.close()
         conn.close()
+        print("sdfsfsdfs")
         return jsonify({"error": "Transaction has already been complete"}), 400
 
-    query = """
-            START TRANSACTION;
+    # query = """
+    #         START TRANSACTION;
 
-            -- Change ownership of card
-            UPDATE ownership
-            SET uid = %s
-            WHERE card_id = %s;
+    #         -- Change ownership of card
+    #         UPDATE ownership
+    #         SET uid = %s
+    #         WHERE card_id = %s;
 
-            -- Mark transaction as accepted
-            UPDATE transaction 
-            SET status = 'accepted'
-            WHERE tid = %s;
+    #         -- Mark transaction as accepted
+    #         UPDATE transaction 
+    #         SET status = 'accepted'
+    #         WHERE tid = %s;
 
-            COMMIT;"""
+    #         COMMIT;"""
 
     print(f'sender_id: {sender_id}')
     print(f'receiver_id: {receiver_id}')
@@ -647,16 +653,29 @@ def accept_transaction():
     print(f'tid: {tid}')
     print(f't_type: {t_type}')
 
+    query = """
+        UPDATE ownership
+        SET uid = %s
+        WHERE card_id = %s;"""
+
     if t_type == 'request':
-        cursor.execute(query, (sender_id, card_id, tid), multi=True)
-        print("dfdfd")
+        cursor.execute(query, (sender_id, card_id,))
     else:
-        cursor.execute(query, (receiver_id, card_id, tid), multi=True)
-        print(f'Query: {query}')
+        cursor.execute(query, (receiver_id, card_id))
+
+    conn.commit()
+
+    query = """
+        UPDATE ownership
+        SET uid = %s
+        WHERE card_id = %s;"""
+
+    cursor.execute("UPDATE transaction SET status = 'accepted' WHERE tid = %s;", (tid,))
 
     conn.commit()
     cursor.close()
     conn.close()
+    print("testing")
     return jsonify({"message": "Transaction accepted successfully"})
 
 
