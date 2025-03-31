@@ -145,7 +145,7 @@ export default function AddCard() {
             <div className="mt-4 text-center flex justify-center space-x-4">
               <button
                 onClick={() => addCard(obtainedCard?.card_id || "")}
-                className="px-6 py-3 text-xl bg-[#c14540] text-white rounded-full hover:bg-[#e47e7b]"
+                className="px-6 py-3 text-xl bg-[#c14540] text-white rounded-full hover:bg-[#ef6d68]"
               >
                 Add Card
               </button>
