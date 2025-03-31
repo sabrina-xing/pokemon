@@ -114,6 +114,6 @@ _(localhost:3000 by default)_
 ![image](https://github.com/user-attachments/assets/dc6d18e0-0911-47bf-af8f-e29c8cd39df8)
 ![image](https://github.com/user-attachments/assets/d8b30a77-243d-4ece-a0a6-ca418f35d2ca)
 ![image](https://github.com/user-attachments/assets/8cbe83c1-a835-426a-97d2-b53a3a60c06f)
-![image](https://github.com/user-attachments/assets/5daaa97b-2430-4dd2-a0dc-177726f2ea35)
+![image](https://github.com/user-attachments/assets/8f15fc83-1772-4cc3-adcc-03d883b4d1c2)
 ![image](https://github.com/user-attachments/assets/f44dcb2f-05f8-4605-a598-d3545f567888)
 ![image](https://github.com/user-attachments/assets/7011bb48-d02e-49ac-84c6-444aa5c66ad0)
