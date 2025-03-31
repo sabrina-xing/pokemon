@@ -19,7 +19,7 @@ export default function ClientLayout({
   return (
     <>
       {!hideNavbar && (
-        <div className="relative p-4 pb-26">
+        <div className="relative p-4 pb-22">
           <Navbar />
         </div>
       )}
