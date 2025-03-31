@@ -16,8 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="font-sans antialiased"
-        style={{ backgroundImage: "url('/bgs/dashboard.png')" }}
+        className="font-sans antialiased bg-cover bg-no-repeat bg-fixed min-h-screen"
+        // style={{ backgroundImage: "url('/bgs/dashboard.png')" }}
+        style={{ backgroundImage: "url('/bgs/pxfuel.jpg')" }}
       >
         <Providers>
           <ClientLayout>
