@@ -10,7 +10,7 @@ Welcome to PokéPals! A full-stack app where you can collect, gift, and gamble f
 
 The final and most up to date code for the application structure will be kept in two folders: client (frontend) and server (backend).
 
-Tech Stack: Python (Flask), Next.js, Typescript
+Tech Stack: Python (Flask), Next.js, Typescript, MySQL
 ## Getting Started
 
 ### Prerequisites
