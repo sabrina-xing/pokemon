@@ -39,6 +39,19 @@ export default function Navbar() {
           </a>
           {/* <a href="/profile" className="hover:text-gray-300">PROFILE</a> */}
           {/* Right: UID Display */}
+          <a href="/transactions" 
+            className="text-xs font-mono px-4 py-1 ml-4
+            text-black drop-shadow text-center flex items-center hover:opacity-60"
+            style={{
+              backgroundImage: `url(${nameBg.src})`,
+              backgroundSize: "100% 100%",
+              width:"240", height:"40",
+            }}
+          >
+            <div>
+                Transactions
+              </div>
+            </a>
           {name && (
             <div className="text-xs font-mono px-4 py-1 ml-4
                           text-black drop-shadow text-center flex items-center"
