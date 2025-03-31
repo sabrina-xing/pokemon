@@ -48,7 +48,9 @@ export default function Signup() {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-cover bg-center"
-             style={{ backgroundImage: "url('/bgs/login.png')" }}>
+            // style={{ backgroundImage: "url('/bgs/login.png')" }}
+            style={{ backgroundImage: "url('/bgs/forest.jpg')" }}
+            >
             <div className="p-6 rounded-lg w-96">
                 <div className="flex justify-center mb-8">
                     <img src="/pokemonlogo.png" alt="Pokémon Logo" className="w-74 h-auto" />
