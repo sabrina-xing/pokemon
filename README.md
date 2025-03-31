@@ -112,7 +112,7 @@ _(localhost:3000 by default)_
 
 ## Interface Design 
 ![image](https://github.com/user-attachments/assets/dc6d18e0-0911-47bf-af8f-e29c8cd39df8)
-![image](https://github.com/user-attachments/assets/d8b30a77-243d-4ece-a0a6-ca418f35d2ca)
+![image](https://github.com/user-attachments/assets/c59d143d-4ac8-467d-b17f-75b4bc2333f9)
 ![image](https://github.com/user-attachments/assets/8cbe83c1-a835-426a-97d2-b53a3a60c06f)
 ![image](https://github.com/user-attachments/assets/8f15fc83-1772-4cc3-adcc-03d883b4d1c2)
 ![image](https://github.com/user-attachments/assets/54a07991-e1e3-4246-bd13-5ee90a491a74)
