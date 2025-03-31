@@ -111,7 +111,8 @@ _(localhost:3000 by default)_
 3. `npm start`
 
 ## Interface Design 
-![image](https://github.com/user-attachments/assets/dc6d18e0-0911-47bf-af8f-e29c8cd39df8)
+![login](https://github.com/user-attachments/assets/9024eb03-7ab6-48d7-b9b6-79d1f053b82e)
+![signup](https://github.com/user-attachments/assets/85289c31-33d2-479d-8e90-834d66af9981)
 ![image](https://github.com/user-attachments/assets/c59d143d-4ac8-467d-b17f-75b4bc2333f9)
 ![image](https://github.com/user-attachments/assets/08af755b-c528-49ec-9dc6-c0fe022a4d98)
 ![image](https://github.com/user-attachments/assets/8f15fc83-1772-4cc3-adcc-03d883b4d1c2)
