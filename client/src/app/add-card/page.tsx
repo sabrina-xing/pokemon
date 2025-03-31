@@ -26,6 +26,12 @@ export default function AddCard() {
     setIsModalOpen(false);
     setObtainedCard(null);  // Optionally reset the card
   };
+  const [isModalOpen, setIsModalOpen] = useState(false);  
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setObtainedCard(null);  // Optionally reset the card
+  };
 
   const getRandomCard = async () => {
     setLoading(true);
@@ -126,3 +132,4 @@ export default function AddCard() {
     </div>
   );
 }
+

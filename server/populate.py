@@ -3,6 +3,7 @@ import csv
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+import bcrypt
 
 # Load environment variables
 load_dotenv()
@@ -87,7 +88,6 @@ schema = [
         damage INT NOT NULL,
         FOREIGN KEY(card_id) REFERENCES pokemon_card(card_id) ON DELETE CASCADE
     );""",
-
     """CREATE TABLE abilities (
         card_id VARCHAR(20) NOT NULL,
         ability_name VARCHAR(20) NOT NULL,
@@ -97,7 +97,34 @@ schema = [
 ]
 
 for query in schema:
+    print(query)
     mycursor.execute(query)
+
+# create index...checks to see if index already exists first
+def create_index(table_name, index_name, col_name):
+
+    params = []
+    check_index_query = """
+    SELECT COUNT(*) 
+    FROM information_schema.statistics 
+    WHERE table_schema = DATABASE()
+    AND table_name = %s
+    AND index_name = %s;
+    """
+    params = [index_name, table_name]
+    mycursor.execute(check_index_query, params)
+    index_exists = mycursor.fetchone()[0] > 0
+    
+    if index_exists:
+        drop_index_query = "DROP INDEX `{}` ON `{}`;".format(index_name, table_name)  # Use backticks for table and index
+        mycursor.execute(drop_index_query)
+    create_index_query = f"CREATE INDEX `{index_name}` ON `{table_name}` (`{col_name}`);"
+    mycursor.execute(create_index_query)
+    db.commit()
+create_index("ownership","index_uid", "uid")
+create_index("ownership","index_own_card", "card_id")
+create_index("pokemon_card","index_card_id", "card_id")
+
 
 mycursor.execute("""
             CREATE VIEW card_owners AS
@@ -109,10 +136,10 @@ mycursor.execute("""
 def convert_date(date_str):
     return datetime.strptime(date_str, "%m/%d/%Y").strftime("%Y-%m-%d")
 
-with open('../pokemon-production.csv', 'r') as csvfile:
+# loading pokemon card table
+with open('../database/pokemon_card_production.csv', 'r') as csvfile:
     csvreader = csv.reader(csvfile)
     next(csvreader)
-
     data_to_insert = []
     for row in csvreader:
         release_date = convert_date(row[6])
@@ -120,7 +147,7 @@ with open('../pokemon-production.csv', 'r') as csvfile:
             row[0],  # card_id
             row[1],  # pname
             row[2],  # set_name
-            row[3].lower() == 'true',  # is_custom (assuming 'true'/'false' in the CSV)
+            row[3].lower() == 'false', #is_custom
             row[4],  # image_url
             row[5],  # generation
             release_date,
@@ -146,11 +173,36 @@ with open('../pokemon-production.csv', 'r') as csvfile:
     rows = mycursor.fetchall()
     for row in rows:
         print(row)
-    
-def getPokemon(card_id, pname, set_name, types, generation, evolution):
-    query = "SELECT * FROM pokemon_card WHERE pname='Pikachu'" 
-    params = []
-    whereClause = " WHERE"
+
+# loading account table
+with open('../database/account.csv','r') as csvfile:
+    csvreader = csv.reader(csvfile)
+    next(csvreader)
+    data_to_insert = []
+    for row in csvreader:
+        hashed_pass = bcrypt.hashpw(row[3].encode('utf-8'), bcrypt.gensalt())
+        data_to_insert.append((int(row[0]), row[1], row[2], hashed_pass, row[4], row[5])) # uid,username,email,password,bio,pfp
+    mycursor.executemany("""
+            INSERT INTO account (
+                uid, username, email, usr_password, bio, pfp    
+            )
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, data_to_insert)
+    db.commit()
+
+with open('../database/ownership.csv','r') as csvfile:
+    csvreader = csv.reader(csvfile)
+    next(csvreader)
+    data_to_insert = []
+    for row in csvreader:
+        data_to_insert.append((int(row[0]), row[1])) # uid, card_id
+    mycursor.executemany("""
+            INSERT INTO ownership (
+                uid, card_id
+            )
+            VALUES (%s, %s)
+        """, data_to_insert)
+    db.commit()
 
 mycursor.close()
 
