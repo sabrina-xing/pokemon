@@ -376,6 +376,46 @@ def get_user_pokemon():
         print(f"Unexpected error: {e}")
         return jsonify({"error": "Something went wrong"}), 500
 
+# Function to get all a user's transactions:
+@app.route('/user_transaction', methods=['GET'])
+def get_user_transaction():
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+    
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        # Extract query parameters
+        uid = request.args.get("uid", type=int)
+
+        query = """
+            SELECT *
+            FROM transaction
+            WHERE sender_id = %s OR receiver_id = %s
+            """
+
+        cursor.execute(query, (uid, uid,))
+
+        results = cursor.fetchall()
+
+        # Close connection
+        cursor.close()
+        conn.close()
+        # Handle case when no results are found
+        if not results:
+            return jsonify({"message": "No transactions found"}), 200
+        return jsonify(results)
+    
+    except mysql.connector.Error as e:
+        print(f"Database query error: {e}")
+        return jsonify({"error": "Database query failed"}), 500
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({"error": "Something went wrong"}), 500
+
+
 # Function to gift card (transfer card to receiver)
 @app.route('/gift_card', methods=['POST'])
 def gift_card():
