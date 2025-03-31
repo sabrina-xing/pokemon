@@ -16,8 +16,8 @@ load_dotenv()
 app = Flask(__name__)
 
 # Enable CORS for all domains on all routes
-# CORS(app,  origins=["http://localhost:3000"])
-CORS(app)
+CORS(app,  origins=["http://localhost:3000"])
+# CORS(app)
 
 # Database connection   
 DB_CONFIG = {
@@ -66,7 +66,6 @@ def search_pokemon():
            
         if pname and not pname.replace(" ", "").isalpha():
             return jsonify({"error": "Invalid pname format"}), 400
-
         # Start building the query dynamically
         query = """
             SELECT pc.*, COALESCE(o.username, NULL) AS owner_username
@@ -77,7 +76,7 @@ def search_pokemon():
         params = []
 
         if card_id:
-            query += " AND card_id = %s"
+            query += " AND pc.card_id = %s"
             params.append(card_id)
         if pname:
             query += " AND pname LIKE %s"
@@ -99,6 +98,7 @@ def search_pokemon():
             query += " AND subtype=%s"
             params.append(f"{subtype}")
         # Execute query
+        print(query)
         cursor.execute(query, params)
         results = cursor.fetchall()
 
@@ -298,7 +298,7 @@ def get_user_pokemon():
         return jsonify({"error": "Database connection failed"}), 500
     
     cursor = conn.cursor(dictionary=True)
-
+    
     try:
         # Extract query parameters
         uid = request.args.get("uid", type=int)
@@ -310,6 +310,7 @@ def get_user_pokemon():
         pokemon_type = request.args.getlist('pokemon_type')
         subtype = request.args.get('subtype', default=None, type=str)
         # Validate inputs (Optional)
+
         if card_id:
             hyphen_count = card_id.count("-")
             if hyphen_count != 1:
@@ -375,6 +376,289 @@ def get_user_pokemon():
     except Exception as e:
         print(f"Unexpected error: {e}")
         return jsonify({"error": "Something went wrong"}), 500
+
+# Function to get all a user's transactions:
+@app.route('/user_transaction', methods=['GET'])
+def get_user_transaction():
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+    
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        # Extract query parameters
+        uid = request.args.get("uid", type=int)
+
+        query = """
+            SELECT *
+            FROM transaction
+            WHERE (sender_id = %s OR receiver_id = %s);
+            """
+
+        cursor.execute(query, (uid, uid,))
+
+        results = cursor.fetchall()
+
+        # Close connection
+        cursor.close()
+        conn.close()
+        # Handle case when no results are found
+        if not results:
+            return jsonify({"message": "No transactions found"}), 200
+        return jsonify(results)
+    
+    except mysql.connector.Error as e:
+        print(f"Database query error: {e}")
+        return jsonify({"error": "Database query failed"}), 500
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({"error": "Something went wrong"}), 500
+
+
+# Function to gift card (transfer card to receiver)
+@app.route('/gift_card', methods=['POST'])
+def gift_card():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.json
+    sender_id = data.get('sender_uid')
+    receiver_username = data.get('receiver_username')
+    card_id = data.get('card_id')
+
+    # Get userid from usernames
+    cursor.execute("SELECT uid FROM account WHERE username = %s", (receiver_username,))
+    receiver_id = cursor.fetchone()[0]
+
+    # Error handling
+    # check if sender and receiver exist in the account table
+    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (sender_id,))        
+    sender_exists = cursor.fetchone()[0] > 0
+
+    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (receiver_id,))
+    receiver_exists = cursor.fetchone()[0] > 0
+
+    if not sender_exists or not receiver_exists:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender or receiver does not exist"}), 400
+
+    # prevent self-transfers
+    if int(sender_id) == int(receiver_id):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender and receiver cannot be the same"}), 400
+
+    # check if sender owns the card
+    cursor.execute("""
+        SELECT uid 
+        FROM ownership 
+        WHERE card_id = %s
+    """, (card_id,))
+
+    latest_owner = cursor.fetchone()
+
+    # if no previous transactions, check if the card is in the original dataset
+    if not latest_owner:
+        cursor.execute("SELECT COUNT(*) FROM pokemon_card WHERE card_id = %s", (card_id,))
+        card_exists = cursor.fetchone()[0] > 0
+
+        if not card_exists:
+            cursor.close()
+            conn.close()
+            return jsonify({"error": "Card does not exist"}), 400
+
+        # if card exists but never been traded, assume original ownership
+        original_owner = sender_id
+    else:
+        original_owner = latest_owner[0]
+    
+    print(f"sender_id: {sender_id}, type: {type(sender_id)}")
+    print(f"original_owner: {original_owner}, type: {type(original_owner)}")
+
+    if int(original_owner) != int(sender_id):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender does not own this card"}), 400
+    
+    cursor.fetchall()
+    # Create transaction
+    query = """INSERT INTO transaction 
+    (card_id, sender_id, receiver_id, tdate, t_type) 
+    VALUES (%s, %s, %s, NOW(), 'gift')"""
+    cursor.execute(query, (card_id, sender_id, receiver_id))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Card gift sent successfully"})
+
+# Function to request card (transfers card to reciever)
+@app.route('/request_card', methods=['POST'])
+def request_card():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.json
+    sender_username = data.get('sender_username')
+    receiver_id = data.get('receiver_uid')
+    card_id = data.get('card_id')
+
+    # Get userid from usernames
+    cursor.execute("SELECT uid FROM account WHERE username = %s", (sender_username,))
+    sender_id = cursor.fetchone()[0]
+
+    # Error handling to ensure sender and reciever exists
+    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (sender_id,))
+    sender_exists = cursor.fetchone()[0] > 0
+
+    cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (receiver_id,))
+    receiver_exists = cursor.fetchone()[0] > 0
+
+    if not sender_exists or not receiver_exists:
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender or receiver does not exist"}), 400
+    
+    # prevent self-transfers
+    if int(sender_id) == int(receiver_id):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender and receiver cannot be the same"}), 400
+    
+    # Check if sender owns card
+    cursor.execute("""
+        SELECT uid 
+        FROM ownership 
+        WHERE card_id = %s
+        """, (card_id,))
+
+    latest_owner = cursor.fetchone()
+
+    if not latest_owner or int(latest_owner[0]) != int(sender_id):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender does not own card"})
+    
+    cursor.fetchall()
+    # Transfer the card
+    query = """INSERT INTO transaction 
+        (card_id, sender_id, receiver_id, tdate, t_type)
+        VALUES (%s, %s, %s, NOW(), 'request')"""
+    cursor.execute(query, (card_id, sender_id, receiver_id))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Card requested successfully"})
+
+# Rejects a gift or request transaction
+@app.route('/reject_transaction', methods=['POST'])
+def reject_transaction():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.json
+    tid = data.get('tid')
+    uid = data.get('uid')
+
+    print(f"tid: {tid}")
+    print(f"uid: {uid}")
+
+    # Check if the user is invovled in the transaction
+    cursor.execute("SELECT sender_id, receiver_id, t_type, status FROM transaction WHERE tid = %s", (tid,))
+    row = cursor.fetchone()
+    sender_id, receiver_id, t_type, status = row
+
+    print(f"status: {status}")
+    print(f"t-type: {t_type}")
+    
+    if status != 'in progress':
+        print("HERHER")
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Transaction has already been complete"}), 400
+
+    # if (t_type == 'request' and int(sender_id) != int(uid)) or (t_type == 'gift' and int(receiver_id) != int(uid)):
+    #     cursor.close()
+    #     conn.close()
+    #     print("hrehe")
+    #     return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
+        
+    query = """UPDATE transaction 
+        SET status = 'rejected'
+        WHERE tid = %s;"""
+    cursor.execute(query, (tid,))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Transaction rejected successfully"})
+
+
+# Accepts a gift or request transaction
+@app.route('/accept_transaction', methods=['POST'])
+def accept_transaction():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.json
+    tid = data.get('tid')
+    uid = data.get('uid')
+
+    # Check if the user is invovled in the transaction
+    cursor.execute("SELECT sender_id, receiver_id, card_id, t_type, status FROM transaction WHERE tid = %s", (tid,))
+    row = cursor.fetchone()
+    sender_id, receiver_id, card_id, t_type, status = row
+
+    # if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
+    #     cursor.close()
+    #     conn.close()
+    #     return jsonify({"error": "Sender and requester is not involved in transaction"}), 400
+    
+    if status != 'in progress':
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Transaction has already been complete"}), 400
+
+    query = """
+            START TRANSACTION;
+
+            -- Change ownership of card
+            UPDATE ownership
+            SET uid = %s
+            WHERE card_id = %s;
+
+            -- Mark transaction as accepted
+            UPDATE transaction 
+            SET status = 'accepted'
+            WHERE tid = %s;
+
+            COMMIT;"""
+
+    print(f'sender_id: {sender_id}')
+    print(f'receiver_id: {receiver_id}')
+    print(f'card_id: {card_id}')
+    print(f'tid: {tid}')
+    print(f't_type: {t_type}')
+
+    if t_type == 'request':
+        cursor.execute(query, (sender_id, card_id, tid), multi=True)
+        print("dfdfd")
+    else:
+        cursor.execute(query, (receiver_id, card_id, tid), multi=True)
+        print(f'Query: {query}')
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Transaction accepted successfully"})
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -23,6 +23,7 @@ export default function ClientLayout({
           <Navbar />
         </div>
       )}
+      {/* <Navbar /> */}
       <main>{children}</main>
     </>
   );

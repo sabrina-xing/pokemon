@@ -6,7 +6,9 @@ import giftRequest from '../../../public/buttons/gift-request.png';
 import mainLogo from '../../../public/buttons/pokepals-logo.png';
 import logout from '../../../public/buttons/logout.png';
 import nameBg from '../../../public/buttons/name-bg.png';
+import trans from '../../../public/buttons/transactions.png';
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   // TO DO: redo this so it looks like the red pokeball navbar with rounded edges
@@ -14,6 +16,7 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   if (status === "loading") return null; // or a loading skeleton
   if (status === "unauthenticated") return null; // or a login link
+  const router = useRouter();
 
   // const uid = session?.user?.id;
   const name = session?.user?.name;
@@ -29,27 +32,29 @@ export default function Navbar() {
 
         <div className="flex justify-evenly font-bold">
           <a href="/dashboard">
-            <Image src={dashboard} alt="Dashboard" width={240} height={40} className="hover:opacity-80 px-2" />
+            <Image src={dashboard} alt="Dashboard" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           <a href="/add-card">
-            <Image src={addCard} alt="Add Card" width={240} height={40} className="hover:opacity-80 px-2" />
+            <Image src={addCard} alt="Add Card" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           <a href="/gift-request">
-            <Image src={giftRequest} alt="Gift & Request" width={240} height={40} className="hover:opacity-80 px-2" />
+            <Image src={giftRequest} alt="Gift & Request" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
-          {/* <a href="/profile" className="hover:text-gray-300">PROFILE</a> */}
-          {/* Right: UID Display */}
+          <a href="/transactions">
+            <Image src={trans} alt="Trans" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
+          </a>
           {name && (
-            <div className="text-xs font-mono px-4 py-1 ml-4
+            <a className="text-xs font-mono px-4 py-1 ml-4 hover:opacity-80 
                           text-black drop-shadow text-center flex items-center"
-                          style={{
-                            backgroundImage: `url(${nameBg.src})`,
-                            backgroundSize: "100% 100%",
-                            width:"240", height:"40",
-                          }}
+              style={{
+                backgroundImage: `url(${nameBg.src})`,
+                backgroundSize: "100% 100%",
+                width: "240", height: "40",
+              }}
+              href="/profile"
             >
               {name}
-            </div>
+            </a>
           )}
 
           <button
@@ -57,7 +62,7 @@ export default function Navbar() {
             className=""
           >
             {/* Logout */}
-            <Image src={logout} alt="Logout" width={110} height={40} className="hover:opacity-80 px-2 top-0" />
+            <Image src={logout} alt="Logout" width={110} height={40} className="hover:opacity-80 px-2 top-0 drop-shadow" />
           </button>
         </div>
       </div>

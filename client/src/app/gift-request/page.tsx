@@ -1,36 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import giftTitle from '../../../public/buttons/gift-title.png';
 import Image from "next/image";
 
+interface Transaction {
+  tid: number;
+  card_id: string;
+  sender_id: number;
+  receiver_id: number;
+  tdate: string;
+  t_type: "gift" | "request";
+  status?: string;
+}
 
 export default function GiftRequest() {
   const [cardId, setCardId] = useState("");
   const [receiverUsername, setReceiverUsername] = useState("");
-  const [senderUsername, setSenderUsername] = useState("");
   const [requestCardId, setRequestCardId] = useState("");
+  const [requestSenderUsername, setRequestSenderUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const { data: session, status } = useSession();
+  const [requests, setRequests] = useState<Transaction[]>([]);
+
+  console.log("session", session);
+  console.log("status", status);
+  console.log("name", session?.user?.id);
+
+  console.log("session", session); // Debugging line
+  const uid = session?.user?.id;
+  console.log("uid", uid); // Debugging line
+
   // Function to gift a card
   const handleGift = async () => {
+
+    if (!uid) {
+      setError("User not logged in.");
+      return;
+    }
+
     setLoading(true);
     setMessage(null);
     setError(null);
     try {
-      // TO DO: test this route
       const response = await fetch("http://127.0.0.1:5000/gift_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ card_id: cardId, receiver_username: receiverUsername }),
+        body: JSON.stringify({
+          card_id: cardId,
+          receiver_username: receiverUsername,
+          sender_uid: uid
+        }),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to gift card.");
 
-      setMessage(`Successfully gifted card ${cardId} to ${receiverUsername}!`);
+      setMessage(`Successfully requested to gift card ${cardId} to ${receiverUsername}!`);
     } catch (err) {
       setError("Error gifting card. Please try again.");
       console.error(err);
@@ -41,21 +71,30 @@ export default function GiftRequest() {
 
   // Function to request a card
   const handleRequest = async () => {
+
+    if (!uid) {
+      setError("User not logged in.");
+      return;
+    }
+
     setLoading(true);
     setMessage(null);
     setError(null);
     try {
-      // TO DO: implement the backend route for this and test it
       const response = await fetch("http://127.0.0.1:5000/request_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ card_id: requestCardId, sender_username: senderUsername }),
+        body: JSON.stringify({
+          card_id: requestCardId,
+          sender_username: requestSenderUsername,
+          receiver_uid: uid,
+        }),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to request card.");
 
-      setMessage(`Successfully requested card ${requestCardId} from ${senderUsername}!`);
+      setMessage(`Successfully requested card ${requestCardId} from ${requestSenderUsername}!`);
     } catch (err) {
       setError("Error requesting card. Please try again.");
       console.error(err);
@@ -65,12 +104,12 @@ export default function GiftRequest() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-black">
+    <div className="pt-10 flex flex-col items-center justify-center text-black">
       <div className="">
         {/* <h1 className="text-4xl font-bold mt-6 font-joystix">
           Gift & Request Pokémon Cards
         </h1> */}
-        <Image src={giftTitle} alt="Gift Title" width={900} height={40} className="" />
+        <Image src={giftTitle} alt="Gift Title" width={800} height={40} className="" />
       </div>
 
       {/* Side-by-side container */}
@@ -185,8 +224,8 @@ export default function GiftRequest() {
             <input
               type="text"
               placeholder="Sender's Username"
-              value={senderUsername}
-              onChange={(e) => setSenderUsername(e.target.value)}
+              value={requestSenderUsername}
+              onChange={(e) => setRequestSenderUsername(e.target.value)}
               className="w-full mt-2 px-4 py-2 bg-gray-50"
             />
             <button
@@ -200,9 +239,16 @@ export default function GiftRequest() {
         </div>
       </div>
       {/* Display messages */}
-      {message && <p className="text-green-600 mt-4">{message}</p>}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-    </div>
+      <div className="bg-white py-2 p-4 mb-8 items-center justify-center flex flex-col"
+        style={{
+          borderRadius: "10px",
+          //   backgroundImage: "linear-gradient(#d76660, #f99987)",
+        }}
+      >
+        {message && <p className="text-green-600">{message}</p>}
+        {error && <p className="text-red-500">{error}</p>}
+      </div>
+    </div >
 
   );
 }

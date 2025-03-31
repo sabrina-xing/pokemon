@@ -55,7 +55,6 @@ export default function Signup() {
         <div className="flex justify-center mb-2">
           <img src={mainLogo.src} alt="PokéPals Logo" className="h-26" />
         </div>
-
         <div className="flex flex-col items-center transition-all duration-500 bg-white z-0"
           style={{ top: "max(200px, 25vh)" }}>
           <div style={{ width: "99%", height: "3px", backgroundColor: "#c14540", marginTop: "3px" }} />
