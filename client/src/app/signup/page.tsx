@@ -57,28 +57,28 @@ export default function Signup() {
         </div>
 
         <div className="flex flex-col items-center transition-all duration-500 bg-white z-0"
-             style={{ top: "max(200px, 25vh)" }}>
+          style={{ top: "max(200px, 25vh)" }}>
           <div style={{ width: "99%", height: "3px", backgroundColor: "#c14540", marginTop: "3px" }} />
           <div className="text-white font-joystix text-md"
-               style={{
-                 backgroundImage: "linear-gradient(#d76660, #f99987)",
-                 textAlign: "center",
-                 width: "99%",
-                 paddingTop: "8px",
-                 paddingBottom: "8px",
-               }}>
+            style={{
+              backgroundImage: "linear-gradient(#d76660, #f99987)",
+              textAlign: "center",
+              width: "99%",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+            }}>
             SIGNUP.TXT
           </div>
           <div style={{ width: "99%", height: "3px", backgroundColor: "#c14540", marginTop: "3px" }} />
 
           <div className="p-16 justify-center items-center flex flex-col"
-               style={{
-                 backgroundImage: "linear-gradient(#d76660, #f99987)",
-                 textAlign: "center",
-                 width: "99%",
-                 paddingTop: "8px",
-                 paddingBottom: "8px",
-               }}>
+            style={{
+              backgroundImage: "linear-gradient(#d76660, #f99987)",
+              textAlign: "center",
+              width: "99%",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+            }}>
 
             {error && <p className="text-red-500 text-sm text-center mb-2">{error}</p>}
 
