@@ -29,14 +29,12 @@ export default function AddCard() {
 
   const uid = session?.user?.uid;
 
-  const uid = session?.user?.uid;
-
   const getRandomCard = async () => {
     if (!uid) {
       setError("User not logged in.");
       return;
     }
-    
+
     setLoading(true);
     setError(null);
     try {
