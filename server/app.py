@@ -145,7 +145,7 @@ def get_random_card():
         # used view
         params = []
         # find 3 random cards
-        query = "WITH owned AS (SELECT card_id FROM ownership WHERE uid = %s) "
+        query = "WITH owned AS (SELECT card_id FROM ownership) "
         query += "SELECT * FROM pokemon_card WHERE card_id NOT IN (SELECT card_id FROM owned) ORDER BY RAND() LIMIT 1;"
         params.append(uid)
         cursor.execute(query, params)
