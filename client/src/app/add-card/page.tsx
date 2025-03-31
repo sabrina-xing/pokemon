@@ -39,7 +39,6 @@ export default function AddCard() {
     try {
     // TO DO: implement backend for this route
       // const uid = 1; // for testing
-      console.log("UID",uid)
       const response = await fetch(`http://127.0.0.1:5000/get_random_card?uid=${uid}`);
       if (!response.ok) throw new Error("Failed to fetch a Pokémon card.");
 
