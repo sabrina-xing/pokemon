@@ -20,7 +20,7 @@ export default function AddCard() {
   const [obtainedCard, setObtainedCard] = useState<Pokemon | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);  
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -37,7 +37,7 @@ export default function AddCard() {
     setLoading(true);
     setError(null);
     try {
-    // TO DO: implement backend for this route
+      // TO DO: implement backend for this route
       // const uid = 1; // for testing
       const response = await fetch(`http://127.0.0.1:5000/get_random_card?uid=${uid}`);
       if (!response.ok) throw new Error("Failed to fetch a Pokémon card.");
@@ -45,7 +45,7 @@ export default function AddCard() {
       const data: Pokemon = await response.json();
       console.log(data)
       setObtainedCard(data);
-      setIsModalOpen(true);  
+      setIsModalOpen(true);
     } catch (err) {
       setError("Error fetching a Pokémon card.");
       console.error(err);
@@ -54,18 +54,18 @@ export default function AddCard() {
     }
   };
 
-  const addCard = async(cardId: string) => {
+  const addCard = async (cardId: string) => {
     setLoading(true);
     setError(null);
     try {
-    // TO DO: implement backend for this route
+      // TO DO: implement backend for this route
       const response = await fetch("http://127.0.0.1:5000/add_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ uid: uid, card_id: cardId }), // change this to actual uid later
       });
       if (!response.ok) throw new Error("Failed to add a card.");
-      setIsModalOpen(false);  
+      setIsModalOpen(false);
     } catch (err) {
       setError("Error adding Pokemon Card");
       console.error(err);
@@ -76,25 +76,57 @@ export default function AddCard() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      {/* Navbar */}
-      {/* <Navbar /> */}
-
-      <h1 className="text-4xl font-bold mt-6 font-joystix">Obtain a Pokémon Card!</h1>
-
-      <button
-        onClick={getRandomCard}
-        disabled={loading}
-        className="mt-6 px-6 py-3 text-xl bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+      <div // box
+        className="flex flex-col items-center transition-all duration-500 bg-white absolute z-0"
+        style={{
+          top: "max(200px, 25vh)",
+        }}
       >
-        {loading ? "Fetching..." : "Get Card"}
-      </button>
+        <div className=""  // line
+          style={{
+            width: "99%",
+            height: "3px",
+            backgroundColor: "#c14540",
+            marginTop: "3px",
+          }}></div>
+        <div className="text-white font-joystix text-md"
+          style={{
+            backgroundImage: "linear-gradient(#d76660, #f99987)",
+            // font-family: "Joystix", monospace,
+            textAlign: "center",
+            width: "99%",
+            paddingTop: "8px",
+            paddingBottom: "8px",
+          }}>
+          ADD_CARD.TXT
+        </div>
+        <div className=""  // line
+          style={{
+            width: "99%",
+            height: "3px",
+            backgroundColor: "#c14540",
+            marginTop: "3px",
+          }}></div>
+        <div className="p-16 justify-center items-center flex flex-col ">
+          <h1 className="text-2xl font-bold font-joystix text-black/65">Obtain a Pokémon Card!</h1>
 
+
+          <button
+            onClick={getRandomCard}
+            disabled={loading}
+            className="mt-12 px-6 py-3 text-lg bg-[#c14540] text-white rounded-lg hover:bg-[#f99987] disabled:bg-gray-400"
+          >
+            {loading ? "Fetching..." : "Get Card"}
+          </button>
+
+        </div>
+      </div>
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
       {/* Display the obtained Pokémon card */}
-{isModalOpen && obtainedCard && (
+      {isModalOpen && obtainedCard && (
         <div className="fixed inset-0 flex justify-center items-center z-50"
-         style={{background:"rgb(0,0,0,0.5)"}}
+          style={{ background: "rgb(0,0,0,0.5)" }}
         >
           <div className="bg-white p-6 rounded-lg w-full max-w-md relative">
             <button
