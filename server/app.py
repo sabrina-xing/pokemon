@@ -565,9 +565,8 @@ def reject_transaction():
 
     # Check if the user is invovled in the transaction
     cursor.execute("SELECT sender_id, receiver_id, t_type FROM transaction WHERE tid = %s", (tid,))
-    sender_id = cursor.fetchone()[0]
-    receiver_id = cursor.fetchone()[1]
-    t_type = cursor.fetchone()[2]
+    row = cursor.fetchone()
+    sender_id, receiver_id, t_type = row
 
     if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
         cursor.close()
@@ -577,7 +576,7 @@ def reject_transaction():
     query = """UPDATE transaction 
         SET status = 'rejected'
         WHERE tid = %s;"""
-    cursor.execut(query, (tid,))
+    cursor.execute(query, (tid,))
     conn.commit()
 
     cursor.close()
@@ -598,15 +597,13 @@ def accept_transaction():
 
     # Check if the user is invovled in the transaction
     cursor.execute("SELECT sender_id, receiver_id, card_id, t_type FROM transaction WHERE tid = %s", (tid,))
-    sender_id = cursor.fetchone()[0]
-    receiver_id = cursor.fetchone()[1]
-    card_id = cursor.fetchone()[2]
-    t_type = cursor.fetchone()[3]
+    row = cursor.fetchone()
+    sender_id, receiver_id, card_id, t_type = row
 
     if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
         cursor.close()
         conn.close()
-        return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
+        return jsonify({"error": "Sender and requester is not involved in transaction"}), 400
     
     query = """
             START TRANSACTION;
@@ -618,15 +615,21 @@ def accept_transaction():
 
             -- Mark transaction as accepted
             UPDATE transaction 
-            SET status = 'rejected'
+            SET status = 'accepted'
             WHERE tid = %s;
 
             COMMIT;"""
 
+    print(f'sender_id: {sender_id}')
+    print(f'receiver_id: {receiver_id}')
+    print(f'card_id: {card_id}')
+    print(f'tid: {tid}')
+    print(f't_type: {t_type}')
+
     if t_type == 'request':
-        cursor.execute(query, (sender_id,))
+        cursor.execute(query, (sender_id, card_id, tid), multi=True)
     else:
-        cursor.execute(query, (receiver_id))
+        cursor.execute(query, (receiver_id, card_id, tid), multi=True)
 
     conn.commit()
 
