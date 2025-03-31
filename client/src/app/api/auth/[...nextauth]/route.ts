@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { JWT } from "next-auth/jwt";
 import pool from "../../../lib/db"; // Ensure `db.ts` is set up correctly
+// import { update } from "next-auth/react";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -54,7 +55,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: any }) {
+    async jwt({ token, user, trigger, session }: { token: JWT; user?: any; trigger?: string; session?: any }) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
@@ -62,9 +63,15 @@ export const authOptions: NextAuthOptions = {
         token.bio = user.bio;
         token.pfp = user.pfp;
       }
+
+      if (trigger === "update" && session?.name) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        token.name = session.name
+      }
+      
       return token;
     },
-    async session({ session, token }: { session: any; token: JWT }) {
+    async session({ session, token, trigger, newSession }: { session: any; token: JWT; trigger?: string; newSession?: any }) {
       session.user = {
         id: token.id as string,
         name: token.name as string,
@@ -72,6 +79,14 @@ export const authOptions: NextAuthOptions = {
         bio: token.bio as string,
         pfp: token.pfp as string,
       };
+
+      if (trigger === "update" && newSession?.name) {
+        // You can update the session in the database if it's not already updated.
+        // await adapter.updateUser(session.user.id, { name: newSession.name })
+
+        // Make sure the updated value is reflected on the client
+        session.name = newSession.name
+      }
       return session;
     },
   },

@@ -23,7 +23,7 @@ export default function GiftRequest() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
+
   const { data: session, status } = useSession();
   const [requests, setRequests] = useState<Transaction[]>([]);
 
@@ -50,11 +50,11 @@ export default function GiftRequest() {
       const response = await fetch("http://127.0.0.1:5000/gift_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          card_id: cardId, 
+        body: JSON.stringify({
+          card_id: cardId,
           receiver_username: receiverUsername,
           sender_uid: uid
-           }),
+        }),
       });
 
       const data = await response.json();
@@ -84,10 +84,11 @@ export default function GiftRequest() {
       const response = await fetch("http://127.0.0.1:5000/request_card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          card_id: requestCardId, 
+        body: JSON.stringify({
+          card_id: requestCardId,
           sender_username: requestSenderUsername,
-          receiver_uid: uid, }),
+          receiver_uid: uid,
+        }),
       });
 
       const data = await response.json();
@@ -100,15 +101,15 @@ export default function GiftRequest() {
     } finally {
       setLoading(false);
     }
-  }; 
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-black">
+    <div className="pt-10 flex flex-col items-center justify-center text-black">
       <div className="">
         {/* <h1 className="text-4xl font-bold mt-6 font-joystix">
           Gift & Request Pokémon Cards
         </h1> */}
-        <Image src={giftTitle} alt="Gift Title" width={900} height={40} className="" />
+        <Image src={giftTitle} alt="Gift Title" width={800} height={40} className="" />
       </div>
 
       {/* Side-by-side container */}
@@ -238,9 +239,16 @@ export default function GiftRequest() {
         </div>
       </div>
       {/* Display messages */}
-      {message && <p className="text-green-600 mt-4">{message}</p>}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-    </div>
+      <div className="bg-white py-2 p-4 mb-8 items-center justify-center flex flex-col"
+        style={{
+          borderRadius: "10px",
+          //   backgroundImage: "linear-gradient(#d76660, #f99987)",
+        }}
+      >
+        {message && <p className="text-green-600">{message}</p>}
+        {error && <p className="text-red-500">{error}</p>}
+      </div>
+    </div >
 
   );
 }

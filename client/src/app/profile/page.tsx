@@ -31,7 +31,7 @@ interface Card {
 //   ); 
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
+  const {data: session, update} = useSession()
   const uid = session?.user?.id;
   const name = session?.user?.name;
   const email = session?.user?.email;
@@ -71,6 +71,17 @@ export default function ProfilePage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Update failed");
+
+      // console.log("new data", bio, pfp);
+      // // Update the session with new bio and pfp
+      // await update({
+      //   user: {
+      //     bio: bio,
+      //     pfp: pfp,
+      //   }
+      // }); 
+      // console.log("new session", session);
+
       alert("Profile updated successfully");
       setEditMode(false);
     } catch (err) {
@@ -115,7 +126,7 @@ export default function ProfilePage() {
               backgroundColor: "#c14540",
               marginTop: "3px",
             }}></div>
-          <div className="p-16 justify-center items-center flex flex-col">
+          <div className="p-16 flex flex-col">
             {pfp ? (
               <img
                 src={pfp}
@@ -202,15 +213,15 @@ export default function ProfilePage() {
               backgroundColor: "#c14540",
               marginTop: "3px",
             }}></div>
-          <div className="p-16 justify-center items-center flex flex-col">
+          <div className="p-8 justify-center items-center flex flex-col">
 
 
             {/* <h2 className="text-md font-semibold mb-4 text-gray-500">Your Pokémon Cards</h2> */}
             {cards.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-4 text-gray-700">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-gray-700">
                 {cards.map((card) => (
                   <div key={card.card_id} className="bg-gray-100 p-2 text-center">
-                    <img src={card.image_url} alt={card.pname} className="w-full h-32 object-contain mb-2" />
+                    <img src={card.image_url} alt={card.pname} className="w-full h-42 object-contain mb-2" />
                     <p className="font-semibold">{card.pname}</p>
                     <p className="text-sm text-gray-600">{card.set_name}</p>
                     <p className="text-sm text-gray-500 italic">{card.rarity}</p>
