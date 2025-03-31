@@ -482,7 +482,8 @@ def gift_card():
         cursor.close()
         conn.close()
         return jsonify({"error": "Sender does not own this card"}), 400
-
+    
+    cursor.fetchall()
     # Create transaction
     query = """INSERT INTO transaction 
     (card_id, sender_id, receiver_id, tdate, t_type) 
@@ -542,6 +543,7 @@ def request_card():
         conn.close()
         return jsonify({"error": "Sender does not own card"})
     
+    cursor.fetchall()
     # Transfer the card
     query = """INSERT INTO transaction 
         (card_id, sender_id, receiver_id, tdate, t_type)
@@ -564,20 +566,28 @@ def reject_transaction():
     tid = data.get('tid')
     uid = data.get('uid')
 
+    print(f"tid: {tid}")
+    print(f"uid: {uid}")
+
     # Check if the user is invovled in the transaction
     cursor.execute("SELECT sender_id, receiver_id, t_type, status FROM transaction WHERE tid = %s", (tid,))
     row = cursor.fetchone()
     sender_id, receiver_id, t_type, status = row
+
+    print(f"status: {status}")
+    print(f"t-type: {t_type}")
     
     if status != 'in progress':
+        print("HERHER")
         cursor.close()
         conn.close()
         return jsonify({"error": "Transaction has already been complete"}), 400
 
-    if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
-        cursor.close()
-        conn.close()
-        return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
+    # if (t_type == 'request' and int(sender_id) != int(uid)) or (t_type == 'gift' and int(receiver_id) != int(uid)):
+    #     cursor.close()
+    #     conn.close()
+    #     print("hrehe")
+    #     return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
         
     query = """UPDATE transaction 
         SET status = 'rejected'
@@ -606,10 +616,10 @@ def accept_transaction():
     row = cursor.fetchone()
     sender_id, receiver_id, card_id, t_type, status = row
 
-    if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
-        cursor.close()
-        conn.close()
-        return jsonify({"error": "Sender and requester is not involved in transaction"}), 400
+    # if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
+    #     cursor.close()
+    #     conn.close()
+    #     return jsonify({"error": "Sender and requester is not involved in transaction"}), 400
     
     if status != 'in progress':
         cursor.close()
@@ -639,11 +649,12 @@ def accept_transaction():
 
     if t_type == 'request':
         cursor.execute(query, (sender_id, card_id, tid), multi=True)
+        print("dfdfd")
     else:
         cursor.execute(query, (receiver_id, card_id, tid), multi=True)
+        print(f'Query: {query}')
 
     conn.commit()
-
     cursor.close()
     conn.close()
     return jsonify({"message": "Transaction accepted successfully"})

@@ -56,12 +56,12 @@ export default function Transaction() {
           const res = await fetch("http://127.0.0.1:5000/accept_transaction", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tid, uid }),
+            body: JSON.stringify({ tid: tid, uid: uid }),
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data.error);
           setMessage("Transaction accepted.");
-          setRequests((prev) => prev.filter((tx) => tx.tid !== tid));
+        //   setRequests((prev) => prev.filter((tx) => tx.tid !== tid));
         } catch (err) {
           setError("Error accepting transaction.");
         }
@@ -72,13 +72,14 @@ export default function Transaction() {
           const res = await fetch("http://127.0.0.1:5000/reject_transaction", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tid, uid }),
+            body: JSON.stringify({ tid: tid, uid: uid }),
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data.error);
           setMessage("Transaction rejected.");
-          setRequests((prev) => prev.filter((tx) => tx.tid !== tid));
+        //   setRequests((prev) => prev.filter((tx) => tx.tid !== tid));
         } catch (err) {
+            console.log()
           setError("Error rejecting transaction.");
         }
       };
@@ -95,7 +96,7 @@ export default function Transaction() {
                         <p>Type: {tx.t_type}</p>
                         <p>Date: {tx.tdate}</p>
                         <p>Status: {tx.status}</p>
-                        {tx.status == 'in progress' && 
+                        {tx.status == 'in progress' && tx.receiver_id == uid && 
                             (<div className="mt-2 flex gap-2">
                                 <button onClick={() => handleAccept(tx.tid)} className="bg-green-500 text-white px-3 py-1 rounded">
                                 Accept
