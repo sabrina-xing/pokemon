@@ -7,6 +7,7 @@ import mainLogo from '../../../public/buttons/pokepals-logo.png';
 import logout from '../../../public/buttons/logout.png';
 import nameBg from '../../../public/buttons/name-bg.png';
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   // TO DO: redo this so it looks like the red pokeball navbar with rounded edges
@@ -14,6 +15,7 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   if (status === "loading") return null; // or a loading skeleton
   if (status === "unauthenticated") return null; // or a login link
+  const router = useRouter();
 
   // const uid = session?.user?.id;
   const name = session?.user?.name;
@@ -53,16 +55,17 @@ export default function Navbar() {
               </div>
             </a>
           {name && (
-            <div className="text-xs font-mono px-4 py-1 ml-4
+            <a className="text-xs font-mono px-4 py-1 ml-4 hover:opacity-80 
                           text-black drop-shadow text-center flex items-center"
-                          style={{
-                            backgroundImage: `url(${nameBg.src})`,
-                            backgroundSize: "100% 100%",
-                            width:"240", height:"40",
-                          }}
+              style={{
+                backgroundImage: `url(${nameBg.src})`,
+                backgroundSize: "100% 100%",
+                width: "240", height: "40",
+              }}
+              href="/profile"
             >
               {name}
-            </div>
+            </a>
           )}
 
           <button

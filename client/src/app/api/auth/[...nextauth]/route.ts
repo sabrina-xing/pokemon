@@ -18,8 +18,10 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Missing email or password");
           }
 
-          // Query MySQL `account` table for user
-          const [users]: any[] = await pool.query("SELECT * FROM account WHERE email = ?", [credentials.email]);
+          const [users]: any[] = await pool.query(
+            "SELECT * FROM account WHERE email = ?",
+            [credentials.email]
+          );
 
           if (users.length === 0) {
             throw new Error("User not found");
@@ -27,13 +29,21 @@ export const authOptions: NextAuthOptions = {
 
           const user = users[0];
 
-          // Validate password
-          const isMatch = await bcrypt.compare(credentials.password, user.usr_password);
+          const isMatch = await bcrypt.compare(
+            credentials.password,
+            user.usr_password
+          );
           if (!isMatch) {
             throw new Error("Invalid credentials");
           }
 
-          return { id: user.uid.toString(), name: user.username, email: user.email };
+          return {
+            id: user.uid.toString(),
+            name: user.username,
+            email: user.email,
+            bio: user.bio ?? "",
+            pfp: user.pfp ?? "",
+          };
         } catch (error) {
           console.error("Login Error:", error);
           return null;
@@ -48,9 +58,9 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.name = user.name;
-        token.email = user.email ?? "";
-        token.uid = user.uid;
-        token.username = user.username;
+        token.email = user.email;
+        token.bio = user.bio;
+        token.pfp = user.pfp;
       }
       return token;
     },
@@ -58,9 +68,9 @@ export const authOptions: NextAuthOptions = {
       session.user = {
         id: token.id as string,
         name: token.name as string,
-        email: token.email as string, // Ensure it's a string
-        uid: token.uid as string,
-        username: token.username as string,
+        email: token.email as string,
+        bio: token.bio as string,
+        pfp: token.pfp as string,
       };
       return session;
     },
@@ -70,4 +80,3 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
-
