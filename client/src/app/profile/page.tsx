@@ -86,127 +86,131 @@ export default function ProfilePage() {
   };
 
   return (
-    // <div className="min-h-screen p-6 text-black">
-    //   <div className="max-w-4xl mx-auto">
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <div // box
-        className="flex flex-col items-center transition-all duration-500 bg-white z-0 mb-8"
-        style={{
-          top: "max(200px, 25vh)",
-        }}
-      >
-        <div className=""  // line
-          style={{
-            width: "99%",
-            height: "3px",
-            backgroundColor: "#c14540",
-            marginTop: "3px",
-          }}></div>
-        <div className="text-white font-joystix text-md"
-          style={{
-            backgroundImage: "linear-gradient(#d76660, #f99987)",
-            // font-family: "Joystix", monospace,
-            textAlign: "center",
-            width: "99%",
-            paddingTop: "8px",
-            paddingBottom: "8px",
-          }}>
-          YOUR_PROFILE.TXT
-        </div>
-        <div className=""  // line
-          style={{
-            width: "99%",
-            height: "3px",
-            backgroundColor: "#c14540",
-            marginTop: "3px",
-          }}></div>
-        <div className="p-16 justify-center items-center flex flex-col">
+    <div className="pt-24 flex flex-col items-center justify-center">
 
-          {/* <div className="mb-8 bg-white p-6 rounded-lg shadow">
+      {/* Side-by-side container */}
+      <div className="flex flex-col md:flex-row gap-8 px-8 justify-center items-start w-full max-w-6xl">
+
+
+        <div // box
+          className="flex flex-col items-center transition-all duration-500 bg-white z-0 mb-8"
+          style={{
+            top: "max(200px, 25vh)",
+          }}
+        >
+          <div className=""  // line
+            style={{
+              width: "99%",
+              height: "3px",
+              backgroundColor: "#c14540",
+              marginTop: "3px",
+            }}></div>
+          <div className="text-white font-joystix text-md"
+            style={{
+              backgroundImage: "linear-gradient(#d76660, #f99987)",
+              // font-family: "Joystix", monospace,
+              textAlign: "center",
+              width: "99%",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+            }}>
+            YOUR_PROFILE.TXT
+          </div>
+          <div className=""  // line
+            style={{
+              width: "99%",
+              height: "3px",
+              backgroundColor: "#c14540",
+              marginTop: "3px",
+            }}></div>
+          <div className="p-16 justify-center items-center flex flex-col">
+
+            {/* <div className="mb-8 bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-2">Personal Info</h2> */}
-          <p className="text-gray-600"><strong className="text-gray-700">Name:</strong> {name}</p>
-          <p className="text-gray-600"><strong className="text-gray-700">Email:</strong> {email}</p>
-          {editMode ? (
-            <>
-              <input
-                className="mt-2 w-full p-2 border"
-                placeholder="Bio"
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-              />
-              <input
-                className="mt-2 w-full p-2 border"
-                placeholder="Profile Picture URL"
-                value={pfp}
-                onChange={(e) => setPfp(e.target.value)}
-              />
+            <p className="text-gray-600"><strong className="text-gray-700">Name:</strong> {name}</p>
+            <p className="text-gray-600"><strong className="text-gray-700">Email:</strong> {email}</p>
+            {editMode ? (
+              <>
+                <input
+                  className="mt-2 w-full p-2 border"
+                  placeholder="Bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                />
+                <input
+                  className="mt-2 w-full p-2 border"
+                  placeholder="Profile Picture URL"
+                  value={pfp}
+                  onChange={(e) => setPfp(e.target.value)}
+                />
+                <button
+                  onClick={handleUpdate}
+                  className="mt-2 px-4 py-2 bg-[#d76660] text-white rounded"
+                >
+                  Save
+                </button>
+              </>
+            ) : (
               <button
-                onClick={handleUpdate}
-                className="mt-2 px-4 py-2 bg-[#d76660] text-white rounded"
+                onClick={() => setEditMode(true)}
+                className="mt-8 px-4 py-2 bg-[#d76660] text-white rounded-full hover:opacity-80"
               >
-                Save
+                Edit Profile
               </button>
-            </>
-          ) : (
-            <button
-              onClick={() => setEditMode(true)}
-              className="mt-8 px-4 py-2 bg-[#d76660] text-white rounded-full hover:opacity-80"
-            >
-              Edit Profile
-            </button>
-          )}
+            )}
+          </div>
         </div>
-      </div>
 
 
-      <div // box
-        className="flex flex-col items-center transition-all duration-500 bg-white z-0 mb-8"
-        style={{
-          top: "max(200px, 25vh)",
-        }}
-      >
-        <div className=""  // line
+        <div // box
+          className="flex flex-col items-center transition-all duration-500 bg-white z-0 mb-8"
           style={{
-            width: "99%",
-            height: "3px",
-            backgroundColor: "#c14540",
-            marginTop: "3px",
-          }}></div>
-        <div className="text-white font-joystix text-md"
-          style={{
-            backgroundImage: "linear-gradient(#d76660, #f99987)",
-            // font-family: "Joystix", monospace,
-            textAlign: "center",
-            width: "99%",
-            paddingTop: "8px",
-            paddingBottom: "8px",
-          }}>
-          YOUR_CARDS.TXT
-        </div>
-        <div className=""  // line
-          style={{
-            width: "99%",
-            height: "3px",
-            backgroundColor: "#c14540",
-            marginTop: "3px",
-          }}></div>
-        <div className="p-16 justify-center items-center flex flex-col">
+            top: "max(200px, 25vh)",
+          }}
+        >
+          <div className=""  // line
+            style={{
+              width: "99%",
+              height: "3px",
+              backgroundColor: "#c14540",
+              marginTop: "3px",
+            }}></div>
+          <div className="text-white font-joystix text-md"
+            style={{
+              backgroundImage: "linear-gradient(#d76660, #f99987)",
+              // font-family: "Joystix", monospace,
+              textAlign: "center",
+              width: "99%",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+            }}>
+            YOUR_CARDS.TXT
+          </div>
+          <div className=""  // line
+            style={{
+              width: "99%",
+              height: "3px",
+              backgroundColor: "#c14540",
+              marginTop: "3px",
+            }}></div>
+          <div className="p-16 justify-center items-center flex flex-col">
 
 
-          {/* <h2 className="text-md font-semibold mb-4 text-gray-500">Your Pokémon Cards</h2> */}
-          {cards.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-gray-400">
-              {cards.map((card) => (
-                <div key={card.card_id} className="bg-gray-200 rounded-lg p-2 text-center">
-                  <img src={card.image_url} alt={card.pname} className="w-full h-32 object-contain mb-2" />
-                  <p className="font-semibold">{card.pname}</p>
-                  <p className="text-sm text-gray-600">{card.set_name}</p>
-                  <p className="text-sm text-gray-500 italic">{card.rarity}</p>
-                </div>
-              ))}
-            </div>
-          ) : <p className="text-gray-400">No cards owned.</p>}
+            {/* <h2 className="text-md font-semibold mb-4 text-gray-500">Your Pokémon Cards</h2> */}
+            {cards.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-gray-400">
+                {cards.map((card) => (
+                  <div key={card.card_id} className="bg-gray-200 rounded-lg p-2 text-center">
+                    <img src={card.image_url} alt={card.pname} className="w-full h-32 object-contain mb-2" />
+                    <p className="font-semibold">{card.pname}</p>
+                    <p className="text-sm text-gray-600">{card.set_name}</p>
+                    <p className="text-sm text-gray-500 italic">{card.rarity}</p>
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-gray-400">No cards owned.</p>}
 
+          </div>
         </div>
       </div>
       {error && <p className="mt-4 text-red-500">{error}</p>}
