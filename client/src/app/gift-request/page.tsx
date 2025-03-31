@@ -14,8 +14,12 @@ interface Transaction {
   t_type: "gift" | "request";
   status?: string;
 }
+=========
+import { useState } from "react";
+import giftTitle from '../../../public/buttons/gift-title.png';
+import Image from "next/image";
 
-
+>>>>>>>>> Temporary merge branch 2
 
 export default function GiftRequest() {
   const [cardId, setCardId] = useState("");
@@ -169,6 +173,53 @@ export default function GiftRequest() {
         <Image src={giftTitle} alt="Gift Title" width={900} height={40} className="" />
       </div>
 
+<<<<<<<<< Temporary merge branch 1
+      {/* Request a Card */}
+      <div className="mt-8 p-6 w-96 bg-white shadow-lg rounded-lg border-2 border-black">
+        <h2 className="text-xl font-bold">Request a Pokémon Card</h2>
+        <input
+          type="text"
+          placeholder="Card ID"
+          value={requestCardId}
+          onChange={(e) => setRequestCardId(e.target.value)}
+          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
+        />
+        <input
+          type="text"
+          placeholder="Sender's Username"
+          value={requestSenderUsername}
+          onChange={(e) => setRequestSenderUsername(e.target.value)}
+          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
+        />
+        <button
+          onClick={handleRequest}
+          disabled={loading}
+          className="mt-4 px-6 py-3 w-full text-black border-2 bg-white rounded-lg hover:bg-gray-100 disabled:bg-gray-400"
+        >
+          {loading ? "Processing..." : "Request Card"}
+        </button>
+      </div>
+
+      {requests.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-4">Pending Requests</h2>
+          {requests.map((tx) => (
+            <div key={tx.tid} className="border p-4 rounded bg-white mb-2">
+              <p>Card ID: {tx.card_id}</p>
+              <div className="mt-2 flex gap-2">
+                <button onClick={() => handleAccept(tx.tid)} className="bg-green-500 text-white px-3 py-1 rounded">
+                  Accept
+                </button>
+                <button onClick={() => handleReject(tx.tid)} className="bg-red-500 text-white px-3 py-1 rounded">
+                  Reject
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+=========
       {/* Side-by-side container */}
       <div className="flex flex-col md:flex-row gap-8 px-8 justify-center items-start w-full max-w-6xl">
 
