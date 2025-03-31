@@ -16,7 +16,7 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
         <img src={pokemon.image_url} alt={pokemon.pname} className="rounded-sm w-45 h-63 object-cover" />
         <h2 className="text-md font-bold font-joystix">{pokemon.pname}</h2>
         <p className="text-xs">{pokemon.pokemon_type} | {pokemon.subtype}</p>
-        <p className="text-xs">{pokemon.set_name} | {pokemon.rarity}</p>
+        <p className="text-xs">{pokemon.card_id} | {pokemon.rarity}</p>
       </div>
     );
   }
