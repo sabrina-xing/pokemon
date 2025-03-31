@@ -76,6 +76,7 @@ schema = [
         receiver_id INT NOT NULL,
         card_id VARCHAR(20) NOT NULL,
         tdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        t_type ENUM('request', 'gift') NOT NULL,
         status ENUM('in progress', 'accepted', 'rejected') NOT NULL DEFAULT 'in progress',
         FOREIGN KEY(sender_id) REFERENCES account(uid),
         FOREIGN KEY(receiver_id) REFERENCES account(uid),

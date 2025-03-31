@@ -390,6 +390,7 @@ def gift_card():
     # Get userid from usernames
     cursor.execute("SELECT uid FROM account WHERE username = %s", (receiver_username,))
     receiver_id = cursor.fetchone()[0] > 0
+
     cursor.execute("SELECT uid FROM account WHERE username = %s", (sender_username,))
     sender_id = cursor.fetchone()[0] > 0
 
@@ -445,7 +446,9 @@ def gift_card():
 
 
     # Transfer the card
-    query = "INSERT INTO transaction (card_id, sender_id, receiver_id, tdate) VALUES (%s, %s, %s, NOW())"
+    query = """INSERT INTO transaction 
+    (card_id, sender_id, receiver_id, tdate, t_type) 
+    VALUES (%s, %s, %s, NOW(), 'gift')"""
     cursor.execute(query, (card_id, sender_id, receiver_id))
     conn.commit()
 
@@ -468,6 +471,7 @@ def request_card():
     # Get userid from usernames
     cursor.execute("SELECT uid FROM account WHERE username = %s", (receiver_username,))
     receiver_id = cursor.fetchone()[0] > 0
+
     cursor.execute("SELECT uid FROM account WHERE username = %s", (sender_username,))
     sender_id = cursor.fetchone()[0] > 0
 
@@ -507,8 +511,8 @@ def request_card():
     
     # Transfer the card
     query = """INSERT INTO transaction 
-        (card_id, sender_id, receiver_id, tdate)
-        VALUES (%s, %s, %s, NOW())"""
+        (card_id, sender_id, receiver_id, tdate, t_type)
+        VALUES (%s, %s, %s, NOW(), 'request')"""
     cursor.execut(query, (card_id, sender_id, requester_id))
     conn.commit()
 
@@ -516,7 +520,87 @@ def request_card():
     conn.close()
 
     return jsonify({"message": "Card requested successfully"})
+
+# Rejects a gift or request transaction
+@app.route('/reject_transaction', methods=['POST'])
+def reject_transaction():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.json
+    tid = data.get('tid')
+    uid = data.get('uid')
+
+    # Check if the user is invovled in the transaction
+    cursor.execute("SELECT sender_id, receiver_id, t_type FROM transaction WHERE tid = %s", (tid,))
+    sender_id = cursor.fetchone()[0]
+    receiver_id = cursor.fetchone()[1]
+    t_type = cursor.fetchone()[2]
+
+    if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
+        
+    query = """UPDATE transaction 
+        SET status = 'rejected'
+        WHERE tid = %s;"""
+    cursor.execut(query, (tid,))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Transaction rejected successfully"})
+
+
+# Accepts a gift or request transaction
+@app.route('/accept_transaction', methods=['POST'])
+def accept_transaction():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    data = request.json
+    tid = data.get('tid')
+    uid = data.get('uid')
+
+    # Check if the user is invovled in the transaction
+    cursor.execute("SELECT sender_id, receiver_id, card_id, t_type FROM transaction WHERE tid = %s", (tid,))
+    sender_id = cursor.fetchone()[0]
+    receiver_id = cursor.fetchone()[1]
+    card_id = cursor.fetchone()[2]
+    t_type = cursor.fetchone()[3]
+
+    if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
     
+    query = """
+            START TRANSACTION;
+
+            -- Change ownership of card
+            UPDATE ownership
+            SET uid = %s
+            WHERE card_id = %s;
+
+            -- Mark transaction as accepted
+            UPDATE transaction 
+            SET status = 'rejected'
+            WHERE tid = %s;
+
+            COMMIT;"""
+
+    if t_type == 'request':
+        cursor.execute(query, (sender_id,))
+    else:
+        cursor.execute(query, (receiver_id))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Transaction accepted successfully"})
 
 
 if __name__ == '__main__':

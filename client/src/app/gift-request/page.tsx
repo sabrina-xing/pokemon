@@ -1,21 +1,33 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 // import Navbar from "../components/navbar";
 
 export default function GiftRequest() {
   const [cardId, setCardId] = useState("");
   const [receiverUsername, setReceiverUsername] = useState("");
-  const [senderUsername, setSenderUsername] = useState("");
   const [requestCardId, setRequestCardId] = useState("");
-  const [requestReceiverUsername, setRequestReceiverUsername] = useState("");
   const [requestSenderUsername, setRequestSenderUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { data: session, status } = useSession();
+
+  console.log("session", session);
+  console.log("status", status);
+  console.log("uid", session?.user?.username);
+
+  const username = session?.user?.username;
 
   // Function to gift a card
   const handleGift = async () => {
+
+    if (!username) {
+      setError("User not logged in.");
+      return;
+    }
+
     setLoading(true);
     setMessage(null);
     setError(null);
@@ -27,14 +39,14 @@ export default function GiftRequest() {
         body: JSON.stringify({ 
           card_id: cardId, 
           receiver_username: receiverUsername,
-          sender_username: senderUsername
+          sender_username: username
            }),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to gift card.");
 
-      setMessage(`Successfully gifted card ${cardId} to ${receiverUsername}!`);
+      setMessage(`Successfully requested to gift card ${cardId} to ${receiverUsername}!`);
     } catch (err) {
       setError("Error gifting card. Please try again.");
       console.error(err);
@@ -45,6 +57,12 @@ export default function GiftRequest() {
 
   // Function to request a card
   const handleRequest = async () => {
+
+    if (!username) {
+      setError("User not logged in.");
+      return;
+    }
+
     setLoading(true);
     setMessage(null);
     setError(null);
@@ -56,13 +74,13 @@ export default function GiftRequest() {
         body: JSON.stringify({ 
           card_id: requestCardId, 
           sender_username: requestSenderUsername,
-          receiver_username: requestReceiverUsername, }),
+          receiver_username: username, }),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to request card.");
 
-      setMessage(`Successfully requested card ${requestCardId} from ${senderUsername}!`);
+      setMessage(`Successfully requested card ${requestCardId} from ${requestSenderUsername}!`);
     } catch (err) {
       setError("Error requesting card. Please try again.");
       console.error(err);
@@ -84,13 +102,6 @@ export default function GiftRequest() {
           placeholder="Card ID"
           value={cardId}
           onChange={(e) => setCardId(e.target.value)}
-          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
-        />
-        <input
-          type="text"
-          placeholder="Sender's Username"
-          value={senderUsername}
-          onChange={(e) => setSenderUsername(e.target.value)}
           className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
         />
         <input
@@ -124,13 +135,6 @@ export default function GiftRequest() {
           placeholder="Sender's Username"
           value={requestSenderUsername}
           onChange={(e) => setRequestSenderUsername(e.target.value)}
-          className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
-        />
-        <input
-          type="text"
-          placeholder="Receiver's Username"
-          value={requestReceiverUsername}
-          onChange={(e) => setRequestReceiverUsername(e.target.value)}
           className="w-full mt-2 px-4 py-2 border rounded-lg bg-gray-50"
         />
         <button
