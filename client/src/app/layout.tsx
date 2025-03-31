@@ -4,7 +4,7 @@ import ClientLayout from "./components/client-layout";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "PokéPals: ",
+  title: "PokéPals: Your place to trade Pokémon cards",
   description: "A place to trade Pokémon cards!",
 };
 
