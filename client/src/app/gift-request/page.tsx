@@ -219,7 +219,6 @@ export default function GiftRequest() {
         </div>
       )}
 
-=========
       {/* Side-by-side container */}
       <div className="flex flex-col md:flex-row gap-8 px-8 justify-center items-start w-full max-w-6xl">
 
