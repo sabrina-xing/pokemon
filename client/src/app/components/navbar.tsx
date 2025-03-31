@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
   // TO DO: redo this so it looks like the red pokeball navbar with rounded edges
@@ -8,9 +8,9 @@ export default function Navbar() {
   if (status === "loading") return null; // or a loading skeleton
   if (status === "unauthenticated") return null; // or a login link
 
-  const uid = session?.user?.uid;
-  const username = session?.user?.name;
-  console.log("UID from session:", uid); // Debugging line
+  // const uid = session?.user?.id;
+  const name = session?.user?.name;
+  // console.log("UID from session:", uid); // Debugging line
   console.log("Session data:", session); // Debugging line
   console.log("Session status:", status); // Debugging line
   return (
@@ -48,11 +48,17 @@ export default function Navbar() {
 
           {/* <a href="/profile" className="hover:text-gray-300">PROFILE</a> */}
           {/* Right: UID Display */}
-          {username && (
+          {name && (
             <div className="ml-6 text-sm font-mono bg-white text-blue-600 px-3 py-1 rounded-full border-2 border-blue-700 drop-shadow">
-              Hello, {username}
+              Hello, {name}
             </div>
           )}
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="text-sm bg-red-600 hover:bg-red-700 px-3 py-1 rounded font-semibold border border-red-800"
+          >
+            Logout
+          </button>
         </div>
       </div>
 
