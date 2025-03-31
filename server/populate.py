@@ -97,7 +97,6 @@ schema = [
 ]
 
 for query in schema:
-    print(query)
     mycursor.execute(query)
 
 # create index...checks to see if index already exists first

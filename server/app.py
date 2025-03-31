@@ -131,6 +131,7 @@ def get_random_card():
     cursor = conn.cursor(dictionary=True)
     try: 
         uid = request.args.get('uid', type=int)
+        print(uid)
         if (uid):
             # check if uid exists
             params=[]
@@ -147,8 +148,7 @@ def get_random_card():
         # find 3 random cards
         query = "WITH owned AS (SELECT card_id FROM ownership) "
         query += "SELECT * FROM pokemon_card WHERE card_id NOT IN (SELECT card_id FROM owned) ORDER BY RAND() LIMIT 1;"
-        params.append(uid)
-        cursor.execute(query, params)
+        cursor.execute(query)
         results = cursor.fetchone()
         if (len(results) < 1):
             return jsonify({"error": "No more Pokemon Cards"}), 500
