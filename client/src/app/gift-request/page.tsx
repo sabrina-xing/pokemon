@@ -14,12 +14,6 @@ interface Transaction {
   t_type: "gift" | "request";
   status?: string;
 }
-=========
-import { useState } from "react";
-import giftTitle from '../../../public/buttons/gift-title.png';
-import Image from "next/image";
-
->>>>>>>>> Temporary merge branch 2
 
 export default function GiftRequest() {
   const [cardId, setCardId] = useState("");
@@ -173,7 +167,6 @@ export default function GiftRequest() {
         <Image src={giftTitle} alt="Gift Title" width={900} height={40} className="" />
       </div>
 
-<<<<<<<<< Temporary merge branch 1
       {/* Request a Card */}
       <div className="mt-8 p-6 w-96 bg-white shadow-lg rounded-lg border-2 border-black">
         <h2 className="text-xl font-bold">Request a Pokémon Card</h2>
