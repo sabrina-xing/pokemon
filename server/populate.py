@@ -37,7 +37,7 @@ schema = [
 
     """CREATE TABLE account (
         uid INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-        username VARCHAR(40) NOT NULL,
+        username VARCHAR(40) NOT NULL UNIQUE,
         email VARCHAR(255) NOT NULL,
         usr_password VARCHAR(255) NOT NULL,
         bio VARCHAR(255),
@@ -76,6 +76,8 @@ schema = [
         receiver_id INT NOT NULL,
         card_id VARCHAR(20) NOT NULL,
         tdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        t_type ENUM('request', 'gift') NOT NULL,
+        status ENUM('in progress', 'accepted', 'rejected') NOT NULL DEFAULT 'in progress',
         FOREIGN KEY(sender_id) REFERENCES account(uid),
         FOREIGN KEY(receiver_id) REFERENCES account(uid),
         FOREIGN KEY(card_id) REFERENCES pokemon_card(card_id)
