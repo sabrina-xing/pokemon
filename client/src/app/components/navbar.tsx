@@ -32,28 +32,30 @@ export default function Navbar() {
 
         <div className="flex justify-evenly font-bold">
           <a href="/dashboard">
-            <Image src={dashboard} alt="Dashboard" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
+            <Image src={dashboard} alt="Dashboard" width={170} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           <a href="/add-card">
-            <Image src={addCard} alt="Add Card" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
+            <Image src={addCard} alt="Add Card" width={170} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           <a href="/gift-request">
-            <Image src={giftRequest} alt="Gift & Request" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
+            <Image src={giftRequest} alt="Gift & Request" width={170} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           <a href="/transactions">
-            <Image src={trans} alt="Trans" width={200} height={40} className="hover:opacity-80 px-2 drop-shadow" />
+            <Image src={trans} alt="Trans" width={170} height={40} className="hover:opacity-80 px-2 drop-shadow" />
           </a>
           {name && (
-            <a className="text-xs font-mono px-4 py-1 ml-4 hover:opacity-80 
-                          text-black drop-shadow text-center flex items-center"
+            <a className="text-xs font-mono px-6 mx-2 py-1 hover:opacity-80
+                          text-white drop-shadow text-center flex items-center"
               style={{
                 backgroundImage: `url(${nameBg.src})`,
                 backgroundSize: "100% 100%",
-                width: "240", height: "40",
+                width: "170", height: "40",
               }}
               href="/profile"
             >
-              {name}
+              <p className="drop-shadow">
+                {name}
+              </p>
             </a>
           )}
 
@@ -62,7 +64,7 @@ export default function Navbar() {
             className=""
           >
             {/* Logout */}
-            <Image src={logout} alt="Logout" width={110} height={40} className="hover:opacity-80 px-2 top-0 drop-shadow" />
+            <Image src={logout} alt="Logout" width={110} height={40} className="hover:opacity-80 px-2 top-0 drop-shadow cursor-pointer" />
           </button>
         </div>
       </div>

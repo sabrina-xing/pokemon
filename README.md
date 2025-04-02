@@ -10,6 +10,10 @@ Welcome to PokéPals! A full-stack app where you can collect, gift, and gamble f
 
 The final and most up to date code for the application structure will be kept in two folders: client (frontend) and server (backend).
 
+**Tech Stack:** 
+- Frontend: Next.js, Typescript
+- Backend: Python (Flask)
+- DB: MySQL
 ## Getting Started
 
 ### Prerequisites
@@ -110,10 +114,10 @@ _(localhost:3000 by default)_
 3. `npm start`
 
 ## Interface Design 
-![image](https://github.com/user-attachments/assets/dc6d18e0-0911-47bf-af8f-e29c8cd39df8)
-![image](https://github.com/user-attachments/assets/3ff95243-24a0-4392-9565-4151aff1731e)
-![image](https://github.com/user-attachments/assets/c33a5674-270e-4684-af68-888439257089)
-![image](https://github.com/user-attachments/assets/5daaa97b-2430-4dd2-a0dc-177726f2ea35)
-![image](https://github.com/user-attachments/assets/f44dcb2f-05f8-4605-a598-d3545f567888)
-
-
+<img src="https://github.com/user-attachments/assets/9024eb03-7ab6-48d7-b9b6-79d1f053b82e" width="400px" style="pointer-events: none;"/>
+<img src="https://github.com/user-attachments/assets/85289c31-33d2-479d-8e90-834d66af9981" width="400px" style="pointer-events: none;"/>
+<img src="https://github.com/user-attachments/assets/c59d143d-4ac8-467d-b17f-75b4bc2333f9" width="400px" style="pointer-events: none;"/>
+<img src="https://github.com/user-attachments/assets/08af755b-c528-49ec-9dc6-c0fe022a4d98" width="400px" style="pointer-events: none;"/>
+<img src="https://github.com/user-attachments/assets/8f15fc83-1772-4cc3-adcc-03d883b4d1c2" width="400px" style="pointer-events: none;"/>
+<img src="https://github.com/user-attachments/assets/54a07991-e1e3-4246-bd13-5ee90a491a74" width="400px" style="pointer-events: none;"/>
+<img src="https://github.com/user-attachments/assets/53febae4-2855-46d8-985b-a198a62da41f" width="400px" style="pointer-events: none;"/>

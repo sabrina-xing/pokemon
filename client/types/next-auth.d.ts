@@ -9,8 +9,8 @@ declare module "next-auth" {
       image?: string | null;
       id: number;
       username: string;
-      bio?: string | null;
-      pfp?: string | null;
+      bio: string | null;
+      pfp: string | null;
     };
   }
 

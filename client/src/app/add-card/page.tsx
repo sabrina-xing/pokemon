@@ -121,7 +121,12 @@ export default function AddCard() {
 
         </div>
       </div>
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+
+      {error &&
+        <div className="bg-white">
+          <p className="text-red-500 mt-4 rounded">{error}</p>
+        </div>
+      }
 
       {/* Display the obtained Pokémon card */}
       {isModalOpen && obtainedCard && (
@@ -145,7 +150,7 @@ export default function AddCard() {
             <div className="mt-4 text-center flex justify-center space-x-4">
               <button
                 onClick={() => addCard(obtainedCard?.card_id || "")}
-                className="px-6 py-3 text-xl bg-[#c14540] text-white rounded-full hover:bg-[#e47e7b]"
+                className="px-6 py-3 text-xl bg-[#c14540] text-white rounded-full hover:bg-[#ef6d68]"
               >
                 Add Card
               </button>
