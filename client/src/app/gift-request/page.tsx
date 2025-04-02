@@ -86,8 +86,8 @@ export default function GiftRequest() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           card_id: requestCardId,
-          sender_username: requestSenderUsername,
-          receiver_uid: uid,
+          sender_uid: uid,
+          receiver_username: requestSenderUsername,
         }),
       });
 

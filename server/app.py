@@ -503,13 +503,13 @@ def request_card():
     cursor = conn.cursor()
 
     data = request.json
-    sender_username = data.get('sender_username')
-    receiver_id = data.get('receiver_uid')
+    sender_id = data.get('sender_uid')
+    receiver_username = data.get('receiver_username')
     card_id = data.get('card_id')
 
     # Get userid from usernames
-    cursor.execute("SELECT uid FROM account WHERE username = %s", (sender_username,))
-    sender_id = cursor.fetchone()[0]
+    cursor.execute("SELECT uid FROM account WHERE username = %s", (receiver_username,))
+    receiver_id = cursor.fetchone()[0]
 
     # Error handling to ensure sender and reciever exists
     cursor.execute("SELECT COUNT(*) FROM account WHERE uid = %s", (sender_id,))
@@ -529,7 +529,7 @@ def request_card():
         conn.close()
         return jsonify({"error": "Sender and receiver cannot be the same"}), 400
     
-    # Check if sender owns card
+    # # Check if sender owns card
     cursor.execute("""
         SELECT uid 
         FROM ownership 
@@ -538,19 +538,22 @@ def request_card():
 
     latest_owner = cursor.fetchone()
 
-    if not latest_owner or int(latest_owner[0]) != int(sender_id):
+    if latest_owner is None or int(latest_owner[0]) != int(receiver_id):
         cursor.close()
         conn.close()
         return jsonify({"error": "Sender does not own card"})
-    
-    cursor.fetchall()
-    # Transfer the card
+  
+    # Create transaction
     query = """INSERT INTO transaction 
         (card_id, sender_id, receiver_id, tdate, t_type)
         VALUES (%s, %s, %s, NOW(), 'request')"""
     cursor.execute(query, (card_id, sender_id, receiver_id))
-    conn.commit()
 
+    print(f'sender_id: {sender_id}')
+    print(f'receiver_id: {receiver_id}')
+    print(f'card_id: {card_id}')
+
+    conn.commit()
     cursor.close()
     conn.close()
 
@@ -583,11 +586,11 @@ def reject_transaction():
         conn.close()
         return jsonify({"error": "Transaction has already been complete"}), 400
 
-    # if (t_type == 'request' and int(sender_id) != int(uid)) or (t_type == 'gift' and int(receiver_id) != int(uid)):
-    #     cursor.close()
-    #     conn.close()
-    #     print("hrehe")
-    #     return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
+    # Check if receiver can accept this transaction
+    if (int(receiver_id) != int(uid)):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
         
     query = """UPDATE transaction 
         SET status = 'rejected'
@@ -614,38 +617,22 @@ def accept_transaction():
     print(f"tid: {tid}")
     print(f"uid: {uid}")
 
-
-
     # Check if the user is invovled in the transaction
     cursor.execute("SELECT sender_id, receiver_id, card_id, t_type, status FROM transaction WHERE tid = %s", (tid,))
     row = cursor.fetchone()
     sender_id, receiver_id, card_id, t_type, status = row
 
-    # if (t_type == 'request' and sender_id != uid) or (t_type == 'gift' and receiver_id != uid):
-    #     cursor.close()
-    #     conn.close()
-    #     return jsonify({"error": "Sender and requester is not involved in transaction"}), 400
-    
+    # Check if receiver can accept this transaction
+    if (int(receiver_id) != int(uid)):
+        cursor.close()
+        conn.close()
+        return jsonify({"error": "Sender and requester is not invovled in transaction"}), 400
+
     if status != 'in progress':
         cursor.close()
         conn.close()
         print("sdfsfsdfs")
         return jsonify({"error": "Transaction has already been complete"}), 400
-
-    # query = """
-    #         START TRANSACTION;
-
-    #         -- Change ownership of card
-    #         UPDATE ownership
-    #         SET uid = %s
-    #         WHERE card_id = %s;
-
-    #         -- Mark transaction as accepted
-    #         UPDATE transaction 
-    #         SET status = 'accepted'
-    #         WHERE tid = %s;
-
-    #         COMMIT;"""
 
     print(f'sender_id: {sender_id}')
     print(f'receiver_id: {receiver_id}')
@@ -653,30 +640,32 @@ def accept_transaction():
     print(f'tid: {tid}')
     print(f't_type: {t_type}')
 
-    query = """
-        UPDATE ownership
-        SET uid = %s
-        WHERE card_id = %s;"""
+    try:
+        cursor.execute("START TRANSACTION;")
 
-    if t_type == 'request':
-        cursor.execute(query, (sender_id, card_id,))
-    else:
-        cursor.execute(query, (receiver_id, card_id))
+        # Update ownership table
+        if t_type == 'request':
+            cursor.execute("UPDATE ownership SET uid = %s WHERE card_id = %s;", (sender_id, card_id,))
+        else:
+            cursor.execute("UPDATE ownership SET uid = %s WHERE card_id = %s;", (receiver_id, card_id))
 
-    conn.commit()
+        # Mark transaction as accepted
+        cursor.execute("UPDATE transaction SET status = 'accepted' WHERE tid = %s;", (tid,))
 
-    query = """
-        UPDATE ownership
-        SET uid = %s
-        WHERE card_id = %s;"""
+        # Commit transaction if everything succeeds
+        conn.commit()
 
-    cursor.execute("UPDATE transaction SET status = 'accepted' WHERE tid = %s;", (tid,))
+        print("Transaction accepted successfully")
+        return jsonify({"message": "Transaction accepted successfully"})
 
-    conn.commit()
+    except Exception as e:
+        # Rollback in case of error
+        conn.rollback()
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 400
+
     cursor.close()
     conn.close()
-    print("testing")
-    return jsonify({"message": "Transaction accepted successfully"})
 
 
 if __name__ == '__main__':
