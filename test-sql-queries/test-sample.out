@@ -1,0 +1,28 @@
+=== New Query ===
+(7, 'evan', 'evan@gmail.com', '123evan', None, None)
+
+=== New Query ===
+(7, 'evan', 'evan@gmail.com', '123evan', 'hello world', None)
+
+=== New Query ===
+('base1-17', 'Beedrill', 'Base', 1, 'https://images.pokemontcg.io/base1/17_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare', "['Grass']", "['Stage 2']", 80, 32, 'Flies at high speed and attacks using the large, venomous stingers on its forelegs and tail.')
+('base1-2', 'Blastoise', 'Base', 1, 'https://images.pokemontcg.io/base1/2_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Water']", "['Stage 2']", 100, 52, 'A brutal Pokémon with pressurized water jets on its shell. They are used for high-speed tackles.')
+
+=== New Query ===
+('base1-1', 'Alakazam', 'Base', 1, 'https://images.pokemontcg.io/base1/1_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Psychic']", "['Stage 2']", 80, 42, 'Its brain can outperform a supercomputer. Its intelligence quotient is said to be 5000.', 'bob')
+
+=== New Query ===
+('base1-14', 'Raichu', 'Base', 1, 'https://images.pokemontcg.io/base1/14_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Lightning']", "['Stage 1']", 80, 40, 'Its long tail serves as a ground to protect itself from its own high-voltage power.', None)
+('base1-16', 'Zapdos', 'Base', 1, 'https://images.pokemontcg.io/base1/16_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Lightning']", "['Basic']", 90, 64, 'A legendary bird Pokémon said to appear from clouds while wielding enormous lightning bolts.', None)
+('base1-20', 'Electabuzz', 'Base', 1, 'https://images.pokemontcg.io/base1/20_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare', "['Lightning']", "['Basic']", 70, 35, 'Normally found near power plants, it can wander away and cause major blackouts in cities.', 'bob')
+
+=== New Query ===
+(12, 2, 1, 'base1-15', datetime.datetime(2025, 4, 3, 12, 31, 30), 'request', 'in progress')
+(13, 2, 1, 'base1-1', datetime.datetime(2025, 4, 3, 12, 31, 30), 'gift', 'in progress')
+
+=== New Query ===
+(12, 2, 1, 'base1-15', datetime.datetime(2025, 4, 3, 12, 31, 30), 'request', 'rejected')
+(13, 2, 1, 'base1-1', datetime.datetime(2025, 4, 3, 12, 31, 30), 'gift', 'accepted')
+
+=== New Query ===
+('base1-14', 'Raichu', 'Base', 1, 'https://images.pokemontcg.io/base1/14_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Lightning']", "['Stage 1']", 80, 40, 'Its long tail serves as a ground to protect itself from its own high-voltage power.', None)

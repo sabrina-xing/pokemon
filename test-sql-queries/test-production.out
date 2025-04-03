@@ -1,0 +1,37 @@
+=== New Query ===
+(7, 'evan', 'evan@gmail.com', '123evan', None, None)
+
+=== New Query ===
+(7, 'evan', 'evan@gmail.com', '123evan', 'hello world', None)
+
+=== New Query ===
+('base1-15', 'Venusaur', 'Base', 1, 'https://images.pokemontcg.io/base1/15_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Grass']", "['Stage 2']", 100, 67, 'This plant blooms when it is absorbing solar energy. It stays on the move to seek sunlight.')
+('base1-17', 'Beedrill', 'Base', 1, 'https://images.pokemontcg.io/base1/17_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare', "['Grass']", "['Stage 2']", 80, 32, 'Flies at high speed and attacks using the large, venomous stingers on its forelegs and tail.')
+('base1-2', 'Blastoise', 'Base', 1, 'https://images.pokemontcg.io/base1/2_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Water']", "['Stage 2']", 100, 52, 'A brutal Pokémon with pressurized water jets on its shell. They are used for high-speed tackles.')
+('dp7-73', 'Skorupi', 'Stormfront', 1, 'https://images.pokemontcg.io/dp7/73_hires.png', 'Diamond & Pearl', datetime.date(2008, 11, 1), 'Common', "['Grass']", "['Basic']", 60, 11, 'It grips prey with its tail claws and injects poison. It tenaciously hangs on until the poison takes.')
+
+=== New Query ===
+('base1-1', 'Alakazam', 'Base', 1, 'https://images.pokemontcg.io/base1/1_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Psychic']", "['Stage 2']", 80, 42, 'Its brain can outperform a supercomputer. Its intelligence quotient is said to be 5000.', 'bob')
+
+=== New Query ===
+('base1-14', 'Raichu', 'Base', 1, 'https://images.pokemontcg.io/base1/14_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Lightning']", "['Stage 1']", 80, 40, 'Its long tail serves as a ground to protect itself from its own high-voltage power.', None)
+('base1-16', 'Zapdos', 'Base', 1, 'https://images.pokemontcg.io/base1/16_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Lightning']", "['Basic']", 90, 64, 'A legendary bird Pokémon said to appear from clouds while wielding enormous lightning bolts.', None)
+('base1-20', 'Electabuzz', 'Base', 1, 'https://images.pokemontcg.io/base1/20_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare', "['Lightning']", "['Basic']", 70, 35, 'Normally found near power plants, it can wander away and cause major blackouts in cities.', 'bob')
+('base1-21', 'Electrode', 'Base', 1, 'https://images.pokemontcg.io/base1/21_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare', "['Lightning']", "['Stage 1']", 80, 40, 'It stores electrical energy under very high pressure. It often explodes with little or no provocation.', None)
+('base1-53', 'Magnemite', 'Base', 1, 'https://images.pokemontcg.io/base1/53_hires.png', 'Base', datetime.date(1999, 1, 9), 'Common', "['Lightning']", "['Basic']", 40, 13, 'Uses anti-gravity to stay suspended. Appears without warning and uses attacks like Thunder Wave.', None)
+('base1-58', 'Pikachu', 'Base', 1, 'https://images.pokemontcg.io/base1/58_hires.png', 'Base', datetime.date(1999, 1, 9), 'Common', "['Lightning']", "['Basic']", 40, 12, 'When several of these Pokémon gather, their electricity can cause lightning storms.', None)
+('base1-67', 'Voltorb', 'Base', 1, 'https://images.pokemontcg.io/base1/67_hires.png', 'Base', datetime.date(1999, 1, 9), 'Common', "['Lightning']", "['Basic']", 40, 10, 'Usually found in power plants. Easily mistaken for a Monster Ball, it has zapped many people.', None)
+('base1-9', 'Magneton', 'Base', 1, 'https://images.pokemontcg.io/base1/9_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Lightning']", "['Stage 1']", 60, 28, 'Formed by several Magnemites linked together. It frequently appears when sunspots flare up.', None)
+('base2-18', 'Electrode', 'Jungle', 1, 'https://images.pokemontcg.io/base2/18_hires.png', 'Base', datetime.date(1999, 6, 16), 'Rare', "['Lightning']", "['Stage 1']", 90, 42, 'It stores electrical energy under very high pressure. It often explodes with little or no provocation.', None)
+('base2-2', 'Electrode', 'Jungle', 1, 'https://images.pokemontcg.io/base2/2_hires.png', 'Base', datetime.date(1999, 6, 16), 'Rare Holo', "['Lightning']", "['Stage 1']", 90, 42, 'It stores electrical energy under very high pressure. It often explodes with little or no provocation.', None)
+
+=== New Query ===
+(12, 2, 1, 'base1-15', datetime.datetime(2025, 4, 3, 12, 31, 30), 'request', 'in progress')
+(13, 2, 1, 'base1-1', datetime.datetime(2025, 4, 3, 12, 31, 30), 'gift', 'in progress')
+
+=== New Query ===
+(12, 2, 1, 'base1-15', datetime.datetime(2025, 4, 3, 12, 31, 30), 'request', 'rejected')
+(13, 2, 1, 'base1-1', datetime.datetime(2025, 4, 3, 12, 31, 30), 'gift', 'accepted')
+
+=== New Query ===
+('base1-21', 'Electrode', 'Base', 1, 'https://images.pokemontcg.io/base1/21_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare', "['Lightning']", "['Stage 1']", 80, 40, 'It stores electrical energy under very high pressure. It often explodes with little or no provocation.', None)
