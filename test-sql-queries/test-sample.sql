@@ -52,3 +52,9 @@ FROM pokemon.pokemon_card WHERE card_id NOT IN (
     SELECT card_id
     FROM owned
 ) ORDER BY RAND() LIMIT 1;
+
+START TRANSACTION;
+INSERT INTO ownership (uid, card_id)
+VALUES (7 ,'base1-14');
+
+SELECT * FROM ownership WHERE uid = 7;

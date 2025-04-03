@@ -35,3 +35,6 @@
 
 === New Query ===
 ('base1-21', 'Electrode', 'Base', 1, 'https://images.pokemontcg.io/base1/21_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare', "['Lightning']", "['Stage 1']", 80, 40, 'It stores electrical energy under very high pressure. It often explodes with little or no provocation.', None)
+
+=== New Query ===
+[(7, 'base1-14')]

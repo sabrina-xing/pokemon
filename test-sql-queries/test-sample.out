@@ -26,3 +26,6 @@
 
 === New Query ===
 ('base1-14', 'Raichu', 'Base', 1, 'https://images.pokemontcg.io/base1/14_hires.png', 'Base', datetime.date(1999, 1, 9), 'Rare Holo', "['Lightning']", "['Stage 1']", 80, 40, 'Its long tail serves as a ground to protect itself from its own high-voltage power.', None)
+
+=== New Query ===
+[(7, 'base1-14')]
